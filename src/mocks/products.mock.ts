@@ -1,0 +1,96 @@
+import type { Product, ProductImage, ProductVariant } from '@/features/home/types/product-type';
+
+const img = (id: string, imageUrl: string): ProductImage => ({ id, imageUrl });
+
+export const mockProducts: Product[] = [
+  {
+    id: 'p_001',
+    name: 'Kính gọng vuông Acetate Classic',
+    brand: 'OptiCraft',
+    category: 'FRAME',
+    frameType: 'FULL_RIM',
+    gender: 'UNISEX',
+    shape: 'SQUARE',
+    frameMaterial: 'ACETATE',
+    status: 'ACTIVE',
+    nosePadType: 'INTEGRATED',
+    hingeType: 'SPRING',
+    minPrice: 890000,
+    maxPrice: 1290000,
+    imageUrl: [
+      img('p_001_i1', 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&q=80&w=1200'),
+      img('p_001_i2', 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=1200'),
+    ],
+    weightGram: 18,
+    modelUrl: '',
+  },
+  {
+    id: 'p_002',
+    name: 'Kính gọng tròn Titanium Air',
+    brand: 'AeroLens',
+    category: 'FRAME',
+    frameType: 'FULL_RIM',
+    gender: 'UNISEX',
+    shape: 'ROUND',
+    frameMaterial: 'TITANIUM',
+    status: 'ACTIVE',
+    nosePadType: 'ADJUSTABLE',
+    hingeType: 'STANDARD',
+    minPrice: 1490000,
+    maxPrice: 1890000,
+    imageUrl: [
+      img('p_002_i1', 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=1200'),
+    ],
+    weightGram: 14,
+    modelUrl: '',
+  },
+];
+
+export const mockVariantsByProductId: Record<string, ProductVariant[]> = {
+  p_001: [
+    {
+      id: 'v_001_01',
+      productId: 'p_001',
+      colorName: 'Black',
+      frameFinish: 'MATTE',
+      lensWidthMm: 52,
+      bridgeWidthMm: 18,
+      templeLengthMm: 140,
+      sizeLabel: 'M',
+      price: 990000,
+      status: 'ACTIVE',
+      type: null,
+      orderItemType: 'IN_STOCK',
+    },
+    {
+      id: 'v_001_02',
+      productId: 'p_001',
+      colorName: 'Tortoise',
+      frameFinish: 'GLOSSY',
+      lensWidthMm: 52,
+      bridgeWidthMm: 18,
+      templeLengthMm: 140,
+      sizeLabel: 'M',
+      price: 1090000,
+      status: 'ACTIVE',
+      type: null,
+      orderItemType: 'IN_STOCK',
+    },
+  ],
+  p_002: [
+    {
+      id: 'v_002_01',
+      productId: 'p_002',
+      colorName: 'Silver',
+      frameFinish: 'SATIN',
+      lensWidthMm: 50,
+      bridgeWidthMm: 19,
+      templeLengthMm: 145,
+      sizeLabel: 'M',
+      price: 1690000,
+      status: 'ACTIVE',
+      type: null,
+      orderItemType: 'IN_STOCK',
+    },
+  ],
+};
