@@ -7,8 +7,19 @@ import type {
   Product,
   ProductVariant,
 } from '../types/product-type';
+    const { data } = await api.get<ApiResponse<Product[]>>('/products');
 
 export const productApi = {
+  getAllProducts: async () => {
+    // 👇 Destructuring: Chỉ lấy phần 'data' từ Axios Response
+    const { data } = await api.get<ApiResponse<Product[]>>('/products');
+
+    // Trả về đúng object: { code: number, result: Product[] }
+    return data;
+  },
+
+
+  export const productApi = {
   getAllProducts: async () => {
     // 👇 Destructuring: Chỉ lấy phần 'data' từ Axios Response
     const { data } = await api.get<ApiResponse<Product[]>>('/products');
