@@ -20,6 +20,20 @@ export default function OrderDetailPage() {
       const data = await orderApi.getOrderDetail(orderId);
       setOrder(data);
     };
+    fetchDetail();
+  }, [orderId]);
+
+  if (!order) {
+    return <div className="p-6">Đang tải chi tiết đơn...</div>;
+  }
+
+useEffect23(() => {
+    if (!orderId) return;
+    const fetchDetail = async () => {
+      const data = await orderApi.getOrderDetail(orderId);
+      setOrder(data);
+    };
+    fetchDetail();
   }, [orderId]);
 
   if (!order) {
@@ -36,6 +50,7 @@ export default function OrderDetailPage() {
     setVerifying(true);
     try {
       await orderApi.verifyOrder(orderId, false);
+      showToast('Đã yêu cầu khách hàng gửi lại thành công!', 'success');
       setTimeout(() => navigate(-1), 1500);
     } catch (error) {
       console.error('Lỗi:', error);

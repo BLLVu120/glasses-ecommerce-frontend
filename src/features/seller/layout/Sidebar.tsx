@@ -1,8 +1,7 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-// Tùy vào đường dẫn thực tế của bạn, hãy trỏ đúng file hook nhé
-import { useSidebar } from '@/features/manager/hooks/useSidebar';
+import { useSidebar } from '../hooks/useSidebar';
 import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 
