@@ -4,7 +4,6 @@ import { jwtDecode } from 'jwt-decode';
 import axios, { AxiosError } from 'axios';
 import { authApi } from '../api/auth-api';
 
-
 import {
   JwtPayloadSchema,
   type AuthStore,
@@ -12,7 +11,6 @@ import {
  
   type RegisterInput,
 } from '../types';
-import { PROFILE_QUERY_KEY } from '@/features/profile/hooks/useProfileQuery';
 import { queryClient } from '@/lib/react-query';
 
 export const useAuthStore = create<AuthStore>()(
@@ -90,8 +88,16 @@ export const useAuthStore = create<AuthStore>()(
         if (!role) return '/';
 
         switch (role) {
+          case 'admin':
+            return '/admin';
+          case 'manager':
+            return '/manager';
+          case 'operation':
+            return '/ops-staff';
           case 'sale':
             return '/seller';
+          case 'shipper':
+            return '/shipper'; // nếu có
           default:
             return '/';
         }

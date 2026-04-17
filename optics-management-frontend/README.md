@@ -1,9 +1,5 @@
 # React + TypeScript + Vite
 
-## Tai lieu cau truc source code (Tieng Viet)
-
-- Xem tai lieu chi tiet tai: `docs/GIOI_THIEU_CAU_TRUC_SOURCECODE_VI.md`
-
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

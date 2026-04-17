@@ -3,10 +3,6 @@ import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import LoginPage from '@/features/auth/page/LoginPage';
 import RegisterPage from '@/features/auth/page/RegisterPage';
 
-import { ProfileLayout } from '@/features/profile/layout/ProfileLayout';
-import ProfilePage from '@/features/profile/page/ProfilePage';
-import MyOrders from '@/features/profile/page/MyOrder';
-
 import ProductDetailPage from '@/features/home/page/ProductDetailPage';
 import HomePage from '@/features/home/page/HomePage';
 import { SearchResults } from '@/features/home/page/SearchResults';
@@ -16,11 +12,7 @@ import { PaymentFailurePage } from '@/features/checkout/pages/PaymentFailurePage
 import { PaymentSuccessPage } from '@/features/checkout/pages/PaymentSuccessPage';
 
 import { MainLayout } from '@/components/layout/MainLayout';
-
-import OrderPage from '@/features/seller/page/order/OrderPage';
-import OrderDetailPage from '@/features/seller/page/order/OrderDetailPage';
 import { RequireRole } from './protected-route';
-import { SellerLayout } from '@/features/seller/layout/SellerLayout';
 
 export const router = createBrowserRouter([
   {
@@ -60,34 +52,20 @@ export const router = createBrowserRouter([
         ],
       },
 
-      // Protected Profile
       {
-        path: 'profile',
+        path: 'dummy',
         element: (
           <RequireRole>
-            <ProfileLayout />
+            <Outlet />
           </RequireRole>
         ),
-        children: [
-          { index: true, element: <ProfilePage /> },
-          { path: 'orders', element: <MyOrders /> },
+        children: [],
         ],
       },
-      // Protected Seller Routes
-      {
-        path: 'seller',
-        element: (
-          <RequireRole allowedRoles={['sale', 'admin']}>
-            <SellerLayout />
-          </RequireRole>
-        ),
-        children: [
-          { index: true, element: <OrderPage /> },
-          { path: 'orders/:orderId', element: <OrderDetailPage /> },
-        ],
+
+
       },
     ],
-  },
 
   // Fallback
   {
