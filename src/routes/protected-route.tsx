@@ -2,7 +2,8 @@ import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { Navigate } from 'react-router-dom';
 
 // components/ProtectedRoute.tsx
-type AllowedRoles = 'admin' | 'sale' | 'customer';
+type AllowedRoles = 'admin' | 'manager' | 'operation' | 'sale' | 'shipper' | 'customer';
+
 
 interface Props {
   children: React.ReactNode;
@@ -16,7 +17,8 @@ export function RequireRole({ children, allowedRoles }: Props) {
     return <Navigate to="/auth/login" replace />;
   }
 
-  if (allowedRoles && !allowedRoles.includes(user!.role as AllowedRoles)) {
+  if (allowedRoles && !allowedRoles.includes(user!.role)) {
+
     return <Navigate to="/" replace />; // hoặc trang "Không có quyền"
   }
 

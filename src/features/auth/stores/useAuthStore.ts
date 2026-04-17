@@ -90,8 +90,16 @@ export const useAuthStore = create<AuthStore>()(
         if (!role) return '/';
 
         switch (role) {
+          case 'admin':
+            return '/admin';
+          case 'manager':
+            return '/manager';
+          case 'operation':
+            return '/ops-staff';
           case 'sale':
             return '/seller';
+          case 'shipper':
+            return '/shipper'; // nếu có
           default:
             return '/';
         }

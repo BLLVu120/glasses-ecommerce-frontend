@@ -27,8 +27,11 @@ export default function LoginForm() {
           <div className="font-bold mb-2">Mock accounts (copy nhanh)</div>
           <div className="space-y-1 font-mono text-[12px]">
             <div>admin / 123456 (ROLE_ADMIN)</div>
+            <div>manager / 123456 (ROLE_MANAGER)</div>
+            <div>operation / 123456 (ROLE_OPERATION)</div>
             <div>sale / 123456 (ROLE_SALE)</div>
             <div>customer / 123456 (ROLE_CUSTOMER)</div>
+            <div>shipper / 123456 (ROLE_SHIPPER)</div>
           </div>
         </div>
       )}
