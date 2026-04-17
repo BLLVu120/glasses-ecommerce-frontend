@@ -28,4 +28,15 @@ const DashboardPage: React.FC = () => {
   );
 };
 
+return (
+    <div className="flex flex-col gap-6 h-full">
+      <KPISection />
+      <OrdersSection orders={displayOrders} isSearchResult={!!searchQuery.trim()} />
+    </div>
+  );
+};
+
+export default DashboardPage;
+
+
 export default DashboardPage;

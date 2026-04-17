@@ -83,6 +83,19 @@ export default function ManagerDashboardPage() {
           Làm mới dữ liệu
         </Button>
       </div>
+        {/* KPI Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Doanh thu */}
+        <Card className="border-none shadow-md bg-white overflow-hidden relative group hover:ring-2 ring-primary/20 transition-all">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+              Doanh thu
+            </CardTitle>
+            <div className="h-10 w-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+              <DollarSign size={20} />
+            </div>
+          </CardHeader>
+          <CardContent></CardContent>
 
       {/* KPI Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
