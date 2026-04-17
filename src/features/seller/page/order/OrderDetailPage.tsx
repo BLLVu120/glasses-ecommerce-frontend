@@ -48,6 +48,26 @@ export default function OrderDetailPage() {
     }
   };
 
+const handleReject = async () => {
+    if (!orderId) return;
+    const confirmed = window.confirm(
+      'Bạn có chắc muốn yêu cầu khách hàng gửi lại đơn? Đơn hàng sẽ chuyển sang trạng thái ON_HOLD.',
+    );
+    if (!confirmed) return;
+
+    setVerifying(true);
+    try {
+      await orderApi.verifyOrder(orderId, false);
+      showToast('Đã yêu cầu khách hàng gửi lại thành công!', 'success');
+      setTimeout(() => navigate(-1), 1500);
+    } catch (error) {
+      console.error('Lỗi:', error);
+      showToast('Có lỗi xảy ra, vui lòng thử lại.', 'error');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const handleApprove = async () => {
     if (!orderId) return;
     setVerifying(true);

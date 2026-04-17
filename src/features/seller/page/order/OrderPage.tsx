@@ -33,6 +33,14 @@ export default function OrderPage() {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="p-6 text-red-500">
+        Đã xảy ra lỗi khi tải danh sách đơn hàng. Vui lòng tải lại trang!
+      </div>
+    );
+  }
+
 
 
   return (
