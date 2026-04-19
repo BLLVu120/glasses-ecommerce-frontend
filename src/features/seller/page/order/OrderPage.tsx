@@ -21,6 +21,8 @@ export default function OrderPage() {
     if (currentPage > 0) setCurrentPage((prev) => prev - 1);
   };
 
+ {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
+
   const handleNextPage = () => {
     if (currentPage < totalPages - 1) setCurrentPage((prev) => prev + 1);
   };

@@ -175,6 +175,9 @@ const handleReject = async () => {
               className="flex-1 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50"
             >
               {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
+
+ {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
+
             </button>
           </div>
         </div>

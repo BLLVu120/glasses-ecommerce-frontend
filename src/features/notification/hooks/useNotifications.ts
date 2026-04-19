@@ -15,6 +15,8 @@ export const useNotifications = () => {
     },
   });
 
+   {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
+
   // 2. Lấy số lượng chưa đọc
   const unreadCountQuery = useQuery({
     queryKey: ['notifications', 'unread-count'],
