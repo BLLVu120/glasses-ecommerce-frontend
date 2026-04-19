@@ -6,9 +6,6 @@ import { Sidebar } from './Sidebar';
 import { SidebarProvider } from './SidebarContext';
 import { useSidebar } from '../hooks/useSidebar';
 
-function DashboardContent() {
-  // Lấy thêm hàm toggleCollapsed để truyền vào nút Hamburger menu trên Mobile
-  const { collapsed, toggleCollapsed } = useSidebar();
 
   return (
     // Đổi bg-background (thường là trắng) thành bg-slate-50 để làm nổi khối giao diện
@@ -23,12 +20,13 @@ function DashboardContent() {
           onMenuClick={toggleCollapsed}
         />
 
-        {/* Chỉnh lại padding một chút để Responsive tốt hơn trên điện thoại (sm:p-6) */}
-        <main className="p-4 sm:p-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
+        
+
+export function AdminDashboardLayout() {
+  return (
+    <SidebarProvider>
+      <DashboardContent />
+    </SidebarProvider>
   );
 }
 
@@ -39,7 +37,6 @@ export function AdminDashboardLayout() {
     </SidebarProvider>
   );
 }
-
 export function AdminDashboardLayout() {
   return (
     <SidebarProvider>

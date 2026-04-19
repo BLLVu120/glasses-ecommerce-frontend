@@ -12,6 +12,20 @@ const STAFF_ROLES: { key: StaffRole; label: string; color: string }[] = [
   { key: 'OPERATION', label: 'Operation', color: 'bg-purple-50 text-purple-600 hover:bg-purple-100' },
   { key: 'SHIPPER', label: 'Shipper', color: 'bg-green-50 text-green-600 hover:bg-green-100' },
 ];
+export function AdminDashboardLayout() {
+  return (
+    <SidebarProvider>
+      <DashboardContent />
+    </SidebarProvider>
+  );
+}
+export function AdminDashboardLayout() {
+  return (
+    <SidebarProvider>
+      <DashboardContent />
+    </SidebarProvider>
+  );
+}
 
 const Toast = ({
   message,

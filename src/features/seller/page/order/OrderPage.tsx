@@ -148,3 +148,10 @@ const handleNextPage = () => {
     </div>
   );
 }
+export function AdminDashboardLayout() {
+  return (
+    <SidebarProvider>
+      <DashboardContent />
+    </SidebarProvider>
+  );
+}
