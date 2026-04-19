@@ -50,6 +50,38 @@ export const useNotifications = () => {
     },
   });
 
+const unreadCountQuery = useQuery({
+    queryKey: ['notifications', 'unread-count'],
+    queryFn: async () => {
+      const { data } = await api.get<BaseResponse<{ unreadCount: number }>>(
+        '/notifications/me/unread-count',
+      );
+      return data.result.unreadCount;
+    },
+  });
+
+  // 3. Mutation: Đánh dấu đã đọc tất cả
+  const readAllMutation = useMutation({
+    mutationFn: () => api.patch('/notifications/me/read-all'),
+    onMutate: async () => {
+      // 🌟 Lạc quan: Đánh dấu tất cả là đã đọc ngay lập tức
+      await queryClient.cancelQueries({ queryKey: ['notifications'] });
+
+      queryClient.setQueryData(
+        ['notifications', 'me'],
+        (oldData: NotificationItem[] | undefined) => {
+          if (!oldData) return [];
+          return oldData.map((item) => ({ ...item, read: true, isRead: true }));
+        },
+      );
+      queryClient.setQueryData(['notifications', 'unread-count'], 0);
+    },
+    onSettled: () => {
+      // Đảm bảo sync lại với server cho chắc ăn
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    },
+  });
+
   // 4. Mutation: Đánh dấu đã đọc MỘT tin nhắn cụ thể (Đã thêm Optimistic Update)
   const readSingleMutation = useMutation({
     mutationFn: (id: string) => api.patch(`/notifications/${id}/read`),
