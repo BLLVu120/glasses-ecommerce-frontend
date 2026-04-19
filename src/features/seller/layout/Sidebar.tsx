@@ -20,14 +20,6 @@ export function SellerSidebar() {
     navigate('/auth/login');
   };
 
-export function SellerSidebar() {
-  const { collapsed, toggleCollapsed } = useSidebar();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const { user, logout } = useAuthStore();
-
-
   const getInitials = (name?: string) => {
     if (!name) return 'U';
     const parts = name.trim().split(' ');
