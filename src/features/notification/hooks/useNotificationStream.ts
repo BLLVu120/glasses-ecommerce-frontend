@@ -17,7 +17,7 @@ export const useNotificationStream = () => {
 
     // 3. Khởi tạo AbortController để quản lý việc đóng/mở kết nối
     const ctrl = new AbortController();
-
+ {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
     // 4. Hàm kết nối SSE (dùng async/await)
     const connectStream = async () => {
       try {

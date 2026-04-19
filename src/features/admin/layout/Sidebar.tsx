@@ -1,14 +1,22 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  LayoutDashboard,
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
+
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useSidebar } from '../hooks/useSidebar';
 import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
+import { useSidebar } from '../hooks/useSidebar';
 
-// Danh sách menu dành riêng cho Seller
-const sellerNavigation = [{ name: 'Bảng điều khiển', href: '/seller', icon: LayoutDashboard }];
+const navigation = [
+  { name: 'Trang chủ', href: '/admin', icon: LayoutDashboard },
 
-export function SellerSidebar() {
+];
+
+export function Sidebar() {
   const { collapsed, toggleCollapsed } = useSidebar();
   const location = useLocation();
   const navigate = useNavigate();
@@ -19,14 +27,6 @@ export function SellerSidebar() {
     logout();
     navigate('/auth/login');
   };
-
-export function SellerSidebar() {
-  const { collapsed, toggleCollapsed } = useSidebar();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const { user, logout } = useAuthStore();
-
 
   const getInitials = (name?: string) => {
     if (!name) return 'U';
@@ -58,9 +58,8 @@ export function SellerSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        {sellerNavigation.map((item) => {
-          const isActive =
-            location.pathname === item.href || location.pathname.startsWith(`${item.href}/`);
+        {navigation.map((item) => {
+          const isActive = location.pathname === item.href;
           return (
             <NavLink
               key={item.name}
@@ -89,10 +88,10 @@ export function SellerSidebar() {
           {!collapsed && (
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-sidebar-foreground truncate">
-                {user?.name || 'Nhân viên bán hàng'}
+                {user?.name || 'Nhân viên'}
               </p>
               <p className="text-xs text-sidebar-muted truncate uppercase">
-                {user?.role || 'SELLER'}
+                {user?.role || 'STAFF'}
               </p>
             </div>
           )}

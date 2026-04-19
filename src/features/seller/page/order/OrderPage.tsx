@@ -21,9 +21,19 @@ export default function OrderPage() {
     if (currentPage > 0) setCurrentPage((prev) => prev - 1);
   };
 
+ {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
+
   const handleNextPage = () => {
     if (currentPage < totalPages - 1) setCurrentPage((prev) => prev + 1);
   };
+
+  if (isError) {
+    return (
+      <div className="p-6 text-red-500">
+        Đã xảy ra lỗi khi tải danh sách đơn hàng. Vui lòng tải lại trang!
+      </div>
+    );
+  }
 
   if (isError) {
     return (
@@ -132,6 +142,9 @@ export default function OrderPage() {
           </div>
         )}
       </div>
+const handleNextPage = () => {
+    if (currentPage < totalPages - 1) setCurrentPage((prev) => prev + 1);
+  }; 
     </div>
   );
 }
