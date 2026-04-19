@@ -142,6 +142,9 @@ export default function OrderPage() {
           </div>
         )}
       </div>
+const handleNextPage = () => {
+    if (currentPage < totalPages - 1) setCurrentPage((prev) => prev + 1);
+  }; 
     </div>
   );
 }

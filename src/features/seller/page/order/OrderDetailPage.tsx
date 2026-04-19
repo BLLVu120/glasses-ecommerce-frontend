@@ -152,6 +152,10 @@ const handleReject = async () => {
                         SPH: {p.osSphere} | CYL: {p.osCylinder} | AXIS: {p.osAxis}
                       </p>
 
+export { SidebarContext };
+
+export { SidebarContext };
+
                       <p className="text-sm text-gray-500 mt-2">Note: {p.note}</p>
                     </div>
                   </>

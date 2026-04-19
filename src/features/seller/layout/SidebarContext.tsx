@@ -22,3 +22,9 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 }
 
 export { SidebarContext };
+
+export { SidebarContext };
+
+
+export { SidebarContext };
+

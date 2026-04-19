@@ -43,3 +43,8 @@ export function SellerLayout() {
     </SidebarProvider>
   );
 }
+return (
+    <SidebarContext.Provider value={{ collapsed, toggleCollapsed }}>
+      {children}
+    </SidebarContext.Provider>
+  );
