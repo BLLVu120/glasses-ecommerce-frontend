@@ -1,7 +1,8 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, LogOut, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useSidebar } from '../hooks/useSidebar';
+// Tùy vào đường dẫn thực tế của bạn, hãy trỏ đúng file hook nhé
+import { useSidebar } from '@/features/manager/hooks/useSidebar';
 import Logo from '@/components/common/Logo';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 
@@ -19,14 +20,6 @@ export function SellerSidebar() {
     logout();
     navigate('/auth/login');
   };
-
-export function SellerSidebar() {
-  const { collapsed, toggleCollapsed } = useSidebar();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const { user, logout } = useAuthStore();
-
 
   const getInitials = (name?: string) => {
     if (!name) return 'U';
