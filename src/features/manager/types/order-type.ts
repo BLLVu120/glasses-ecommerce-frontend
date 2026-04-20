@@ -13,7 +13,21 @@ export interface Prescription {
   osPd: number;
   note: string;
 }
-
+export interface Prescription1 {
+  id: string;
+  imageUrl: string | null;
+  odSphere: number;
+  odCylinder: number;
+  odAxis: number;
+  odAdd: number;
+  odPd: number;
+  osSphere: number;
+  osCylinder: number;
+  osAxis: number;
+  osAdd: number;
+  osPd: number;
+  note: string;
+}
 export interface OrderItem {
   orderItemId: string;
   productId: string | null; // Đã thêm dựa theo JSON mới
