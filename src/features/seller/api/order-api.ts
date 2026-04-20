@@ -5,8 +5,19 @@ export interface Order {
   orderId: string;
   customerId: string;
   phoneNumber: string;
+  recipientName?: string | null;
   deliveryAddress: string;
-  orderStatus: 'AWAITING_VERIFICATION';
+  orderStatus:
+    | 'PENDING'
+    | 'AWAITING_VERIFICATION'
+    | 'ON_HOLD'
+    | 'CONFIRMED'
+    | 'PROCESSING'
+    | 'PRODUCED'
+    | 'SHIPPED'
+    | 'COMPLETED'
+    | 'CANCELLED'
+    | string;
   totalAmount: number;
   depositAmount: number;
   items: OrderItem[];
@@ -43,26 +54,31 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export interface PaginatedResponse<T> {
-  items: T[];
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
+export interface GetOrdersParams {
+  status?: string;
+  page?: number;
+  size?: number;
+  sortBy?: string;
+  sortDir?: 'asc' | 'desc';
 }
 
 export const orderApi = {
+  getOrders: async (params?: GetOrdersParams): Promise<PaginatedResponse<Order>> => {
+    const response = await api.get('/management/orders', { params });
+    return response.data.result;
+  },
+
   getAwaitingVerificationOrders: async (
     page: number = 0,
     size: number = 10,
   ): Promise<PaginatedResponse<Order>> => {
-    // Truyền param vào URL
-    const response = await api.get(
-      `/management/orders?status=AWAITING_VERIFICATION&page=${page}&size=${size}&sortBy=createdAt&sortDir=desc`,
-    );
-
-    // Trả về TOÀN BỘ object chứa items, page, totalPages...
-    return response.data.result;
+    return orderApi.getOrders({
+      status: 'AWAITING_VERIFICATION',
+      page,
+      size,
+      sortBy: 'createdAt',
+      sortDir: 'desc',
+    });
   },
   getOrderDetail: async (orderId: string): Promise<Order> => {
     const res = await api.get(`/management/orders/${orderId}`);
@@ -72,10 +88,3 @@ export const orderApi = {
     await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
   },
 };
-updateProfile: (data: FormData) => {
-    return api.put('/profile', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },

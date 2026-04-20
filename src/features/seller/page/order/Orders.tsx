@@ -27,6 +27,10 @@ export default function OrderDetailPage() {
     return <div className="p-6">Đang tải chi tiết đơn...</div>;
   }
 
+    const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const handleReject = async () => {
     if (!orderId) return;

@@ -153,7 +153,13 @@ const handleReject = async () => {
                       </p>
 
 export { SidebarContext };
-
+export function AdminDashboardLayout() {
+  return (
+    <SidebarProvider>
+      <DashboardContent />
+    </SidebarProvider>
+  );
+}
 export { SidebarContext };
 
                       <p className="text-sm text-gray-500 mt-2">Note: {p.note}</p>
