@@ -21,7 +21,7 @@ import OrderPage from '@/features/seller/page/order/OrderPage';
 import OrderDetailPage from '@/features/seller/page/order/OrderDetailPage';
 import { RequireRole } from './protected-route';
 import { SellerLayout } from '@/features/seller/layout/SellerLayout';
-
+import { SellerLayout } from '@/features/seller/layout/SellerLayout';
 export const router = createBrowserRouter([
   {
     children: [
