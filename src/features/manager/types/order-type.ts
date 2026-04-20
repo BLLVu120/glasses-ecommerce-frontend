@@ -47,6 +47,17 @@ export interface OrderItem {
   status: 'IN_PRODUCTION' | 'COMPLETED' | 'PENDING' | string | null;
   prescription: Prescription | null;
 }
+export interface Payment2 {
+  id: string;
+  paymentMethod: string;
+  paymentPurpose: string;
+  amount: number;
+  percentage: number | null;
+  status: string;
+  paymentDate: string | null;
+  description: string | null;
+  transactionReference: string | null;
+}
 
 export interface Payment {
   id: string;
