@@ -3,8 +3,6 @@ import { Outlet } from "react-router-dom";
 import Footer from "./footer/Footer";
 import Header from "./header";
 import { CartDrawer } from "@/features/cart/components/CartDrawer";
-import ChatBot from "@/features/chatbot/components/ChatBot";
-
 
 export const MainLayout = () => {
   return (
@@ -19,10 +17,6 @@ export const MainLayout = () => {
       </main>
 
       <Footer />
-
-      <ChatBot />
-
-
     </div>
   );
 };
