@@ -17,3 +17,7 @@ export const orderApi = {
     await api.delete(`/management/orders/${orderId}`);
   },
 };
+deleteOrder: async (orderId: string): Promise<void> => {
+    await api.delete(`/management/orders/${orderId}`);
+  },
+};
