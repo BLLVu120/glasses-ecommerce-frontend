@@ -25,6 +25,14 @@ export const CartDrawer = () => {
               <span className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[10px] min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full font-black border-2 border-white shadow-sm">
                 {items.length}
               </span>
+                {/* HEADER */}
+        <div className="flex items-center justify-between p-5 border-b bg-white shrink-0 z-10">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <ShoppingBag className="w-6 h-6 text-zinc-900" />
+              <span className="absolute -top-2 -right-2 bg-zinc-900 text-white text-[10px] min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full font-black border-2 border-white shadow-sm">
+                {items.length}
+              </span>
             </div>
             <SheetHeader>
               <SheetTitle className="text-xl font-black uppercase tracking-tighter text-zinc-900">
