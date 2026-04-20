@@ -13,7 +13,25 @@ import {
   type RegisterInput,
 } from '../types';
 import { PROFILE_QUERY_KEY } from '@/features/profile/hooks/useProfileQuery';
+import { queryClient } from '@/lib/react-query';import {
+  JwtPayloadSchema,
+  type AuthStore,
+  type UserState,
+ 
+  type RegisterInput,
+} from '../types';
+import { PROFILE_QUERY_KEY } from '@/features/profile/hooks/useProfileQuery';
 import { queryClient } from '@/lib/react-query';
+import {
+  JwtPayloadSchema,
+  type AuthStore,
+  type UserState,
+ 
+  type RegisterInput,
+} from '../types';
+import { PROFILE_QUERY_KEY } from '@/features/profile/hooks/useProfileQuery';
+import { queryClient } from '@/lib/react-query';
+
 
 export const useAuthStore = create<AuthStore>()(
   persist(
