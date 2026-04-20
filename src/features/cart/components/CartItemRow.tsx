@@ -26,6 +26,16 @@ export const CartItemRow = ({
     item.prescription?.os?.axis ||
     item.prescription?.os?.add
   );
+  const hasManualInput = !!(
+    item.prescription?.od?.sphere ||
+    item.prescription?.od?.cylinder ||
+    item.prescription?.od?.axis ||
+    item.prescription?.od?.add ||
+    item.prescription?.os?.sphere ||
+    item.prescription?.os?.cylinder ||
+    item.prescription?.os?.axis ||
+    item.prescription?.os?.add
+  );
 
   const hasPrescription = hasImage || hasManualInput || !!item.prescription?.notes;
 

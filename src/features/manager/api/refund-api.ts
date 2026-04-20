@@ -14,7 +14,16 @@ export const refundApi = {
     );
     return res.data?.result || [];
   },
+inActivateVariant: async (variantId: string): Promise<void> => {
+    await api.patch(`/refund/variant/${variantId}/in-activate`);
+  },
 
+  getAffectedOrders: async (variantId: string): Promise<RefundItem[]> => {
+    const res = await api.get<ApiResponse<RefundItem[]>>(
+      `/refund/affected-orders/${encodeURIComponent(variantId)}`,
+    );
+    return res.data?.result || [];
+  },
   // [Khách hủy] Lấy đơn đã hủy có thanh toán thành công
   // Trong file refund-api.ts
   getCancelledPaidOrders: async (params?: PaginationParams): Promise<PaginatedResult<Order>> => {

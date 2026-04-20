@@ -13,7 +13,21 @@ export interface Prescription {
   osPd: number;
   note: string;
 }
-
+export interface Prescription1 {
+  id: string;
+  imageUrl: string | null;
+  odSphere: number;
+  odCylinder: number;
+  odAxis: number;
+  odAdd: number;
+  odPd: number;
+  osSphere: number;
+  osCylinder: number;
+  osAxis: number;
+  osAdd: number;
+  osPd: number;
+  note: string;
+}
 export interface OrderItem {
   orderItemId: string;
   productId: string | null; // Đã thêm dựa theo JSON mới
@@ -32,6 +46,17 @@ export interface OrderItem {
   totalPrice: number;
   status: 'IN_PRODUCTION' | 'COMPLETED' | 'PENDING' | string | null;
   prescription: Prescription | null;
+}
+export interface Payment2 {
+  id: string;
+  paymentMethod: string;
+  paymentPurpose: string;
+  amount: number;
+  percentage: number | null;
+  status: string;
+  paymentDate: string | null;
+  description: string | null;
+  transactionReference: string | null;
 }
 
 export interface Payment {
