@@ -104,7 +104,13 @@ const AssignRoleModal = ({
             <span>{error}</span>
           </div>
         )}
-
+export function AdminDashboardLayout() {
+  return (
+    <SidebarProvider>
+      <DashboardContent />
+    </SidebarProvider>
+  );
+}
         <div className="space-y-2">
           {/* Render các role của Staff */}
           {STAFF_ROLES.map((roleObj) => (
@@ -139,6 +145,22 @@ const AssignRoleModal = ({
             )}
           </button>
         </div>
+
+{/* Nút riêng biệt để chuyển về Customer */}
+          <button
+            onClick={() => handleAssign('CUSTOMER')}
+            disabled={assignMutation.isPending}
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 bg-slate-100 text-slate-600 hover:bg-slate-200"
+          >
+            <span>Khách hàng (Customer)</span>
+            {assignMutation.isPending && assignMutation.variables?.role === 'CUSTOMER' ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <ShieldCheck className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+
 
         <button
           onClick={onClose}
