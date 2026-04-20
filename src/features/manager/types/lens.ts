@@ -6,7 +6,13 @@ export interface LensProduct {
   material: string;
   price: number;
   description: string;
+}export interface CreateLensRequest {
+  name: string;
+  material: string;
+  price: number;
+  description: string;
 }
+
 
 export interface CreateLensRequest {
   name: string;
