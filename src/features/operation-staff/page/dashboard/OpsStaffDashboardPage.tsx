@@ -13,6 +13,10 @@ const DashboardPage: React.FC = () => {
   }, [fetchProcessingOrders]);
 
   useEffect(() => {
+    fetchProcessingOrders();
+  }, [fetchProcessingOrders]);
+
+  useEffect(() => {
     if (searchQuery.trim()) {
       searchOrders(processingOrders, searchQuery);
     }
