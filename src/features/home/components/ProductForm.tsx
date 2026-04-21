@@ -77,12 +77,15 @@ export default function ProductForm({ productId }: { productId: string }) {
       prescription?.os && Object.values(prescription.os).some((val) => !isValueEmpty(val)),
     );
 
-    const hasPrescriptionData = Boolean(
-      prescription?.imageUrl ||
-      (prescription?.notes && String(prescription.notes).trim() !== '') ||
-      isOdHasData ||
-      isOsHasData,
-    );
+    const hasImagePrescription = Boolean(prescription?.imageUrl?.trim());
+    const hasEyePrescription = isOdHasData || isOsHasData;
+    const hasPrescriptionData = hasImagePrescription || hasEyePrescription;
+
+    if (!hasPrescriptionData) {
+      toast.error('Vui lòng tải ảnh đơn bác sĩ hoặc nhập thông tin mắt.');
+      return;
+    }
+
     const finalOrderType: 'buy-now' | 'pre-order' | 'custom' =
       selectedVariant.orderItemType === 'PRE_ORDER'
         ? 'pre-order'
