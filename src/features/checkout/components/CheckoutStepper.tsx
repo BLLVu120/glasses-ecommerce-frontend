@@ -26,3 +26,20 @@ export const CheckoutStepper = ({ currentStep }: { currentStep: number }) => {
     </div>
   );
 };
+        return (
+          <div
+            key={index}
+            className={`pb-4 px-2 text-sm font-medium relative flex-1 text-center sm:text-left sm:flex-none sm:w-48 transition-colors
+              ${isActive ? 'text-[#1e2575]' : isCompleted ? 'text-green-600' : 'text-gray-400'}`}
+          >
+            <span className="flex items-center justify-center sm:justify-start gap-2">
+              {isCompleted && <CheckCircle2 className="w-4 h-4" />}
+              {step}
+            </span>
+            {isActive && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#1e2575]" />}
+          </div>
+        );
+      })}
+    </div>
+  );
+};

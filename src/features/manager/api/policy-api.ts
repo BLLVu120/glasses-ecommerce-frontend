@@ -22,21 +22,6 @@ export interface PolicyForm {
   effectiveTo: string;
 }
 
-export interface PolicyForm {
-  code: string;
-  title: string;
-  description: string;
-  effectiveFrom: string;
-  effectiveTo: string;
-}
-export interface PolicyForm {
-  code: string;
-  title: string;
-  description: string;
-  effectiveFrom: string;
-  effectiveTo: string;
-}
-
 export interface PolicyListResult {
   items: Policy[];
   page: number;

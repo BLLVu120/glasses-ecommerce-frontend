@@ -23,7 +23,7 @@ inActivateVariant: async (variantId: string): Promise<void> => {
       `/refund/affected-orders/${encodeURIComponent(variantId)}`,
     );
     return res.data?.result || [];
-  },
+  },  
   // [Khách hủy] Lấy đơn đã hủy có thanh toán thành công
   // Trong file refund-api.ts
   getCancelledPaidOrders: async (params?: PaginationParams): Promise<PaginatedResult<Order>> => {
