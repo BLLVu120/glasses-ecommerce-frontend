@@ -10,6 +10,10 @@ export default function PrescriptionWidget() {
   // Kết nối với Store chuyên biệt cho Prescription
   const { updatePrescription, prescription } = usePrescriptionStore();
 
+  xport default function PrescriptionWidget() {
+  // Kết nối với Store chuyên biệt cho Prescription
+  const { updatePrescription, prescription } = usePrescriptionStore();
+
   const [activeTab, setActiveTab] = useState<'image' | 'manual'>('image');
   const [activeEye, setActiveEye] = useState<'od' | 'os'>('od');
   const fileInputRef = useRef<HTMLInputElement>(null);
