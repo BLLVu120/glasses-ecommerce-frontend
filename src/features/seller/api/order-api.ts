@@ -43,14 +43,6 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export interface PaginatedResponse<T> {
-  items: T[];
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
 export const orderApi = {
   getAwaitingVerificationOrders: async (
     page: number = 0,
@@ -72,10 +64,3 @@ export const orderApi = {
     await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
   },
 };
-updateProfile: (data: FormData) => {
-    return api.put('/profile', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },
