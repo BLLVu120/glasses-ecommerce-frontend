@@ -13,6 +13,10 @@ export default function PrescriptionWidget() {
   const [activeTab, setActiveTab] = useState<'image' | 'manual'>('image');
   const [activeEye, setActiveEye] = useState<'od' | 'os'>('od');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const [activeTab, setActiveTab] = useState<'image' | 'manual'>('image');
+  const [activeEye, setActiveEye] = useState<'od' | 'os'>('od');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Helper cập nhật dữ liệu mắt (OD/OS) một cách type-safe
   const updateEyeData = (eye: 'od' | 'os', field: keyof EyeSpecs, value: string) => {
