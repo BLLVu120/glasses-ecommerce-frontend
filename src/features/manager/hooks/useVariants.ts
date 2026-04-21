@@ -34,7 +34,31 @@ export const useVariants = (productId: string) => {
     staleTime: 1000 * 60 * 5,
   });
 };
-
+// --- Hook 2: Lấy toàn bộ Variant (dùng hàm getAll cũ của bạn) ---
+export const useVariants = (productId: string) => {
+  return useQuery({
+    queryKey: [...QUERY_KEYS.byProduct(productId), 'all'],
+    queryFn: async () => {
+      // Vì variantApi.getAll bạn đã xử lý bóc tách .items bên trong rồi
+      const data = await variantApi.getAll(productId);
+      return data || [];
+    },
+    enabled: !!productId,
+    staleTime: 1000 * 60 * 5,
+  });
+};// --- Hook 2: Lấy toàn bộ Variant (dùng hàm getAll cũ của bạn) ---
+export const useVariants = (productId: string) => {
+  return useQuery({
+    queryKey: [...QUERY_KEYS.byProduct(productId), 'all'],
+    queryFn: async () => {
+      // Vì variantApi.getAll bạn đã xử lý bóc tách .items bên trong rồi
+      const data = await variantApi.getAll(productId);
+      return data || [];
+    },
+    enabled: !!productId,
+    staleTime: 1000 * 60 * 5,
+  });
+};
 // --- Hook 3: Tạo Variant ---
 export const useCreateVariant = (productId: string) => {
   const queryClient = useQueryClient();
