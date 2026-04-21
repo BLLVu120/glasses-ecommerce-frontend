@@ -12,7 +12,21 @@ export const useLenses = () => {
     select: (data) => data.result,
     staleTime: 1000 * 60 * 5,
     retry: 2,
-  });
+  }); // 2. CREATE - Thêm mới sản phẩm
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateLensRequest) => lensApi.create(payload),
+
+    // Khi bắt đầu gửi request, hiện loading toast
+    onMutate: () => {
+      toast.loading('Đang gửi yêu cầu...', { id: 'lens-action' });
+    }, // 2. CREATE - Thêm mới sản phẩm
+  const createMutation = useMutation({
+    mutationFn: (payload: CreateLensRequest) => lensApi.create(payload),
+
+    // Khi bắt đầu gửi request, hiện loading toast
+    onMutate: () => {
+      toast.loading('Đang gửi yêu cầu...', { id: 'lens-action' });
+    },
 
   // 2. CREATE - Thêm mới sản phẩm
   const createMutation = useMutation({
