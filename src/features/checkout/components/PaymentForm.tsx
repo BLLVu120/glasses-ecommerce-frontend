@@ -36,7 +36,18 @@ export const PaymentForm = () => {
               <span className="text-[10px] text-gray-500 mt-1 text-center">
                 Thanh toán qua QR, Thẻ ATM/Nội địa
               </span>
+            </Label
+                     <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-[#4A8795]" />
+              )}
+              <div className="p-3 bg-blue-100 rounded-full mb-3">
+                <CreditCard className="h-6 w-6 text-blue-600" />
+              </div>
+              <span className="font-bold text-gray-900">VNPay</span>
+              <span className="text-[10px] text-gray-500 mt-1 text-center">
+                Thanh toán qua QR, Thẻ ATM/Nội địa
+              </span>
             </Label>
+          </div>>
           </div>
 
           {/* LỰA CHỌN COD */}
