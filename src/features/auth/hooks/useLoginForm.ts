@@ -10,6 +10,10 @@ export const useLoginForm = () => {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const isLoading = useAuthStore((state) => state.isLoading);
+  export const useLoginForm = () => {
+  const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
   // Khởi tạo Form với React Hook Form + Zod
   const form = useForm<LoginInput>({

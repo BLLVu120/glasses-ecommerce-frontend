@@ -26,6 +26,24 @@ export const useAffectedOrders = (variantId: string) => {
   });
 };
 
+// Lấy danh sách đơn bị ảnh hưởng (Bước 2)
+export const useAffectedOrders = (variantId: string) => {
+  return useQuery({
+    queryKey: refundKeys.affectedOrders(variantId),
+    queryFn: () => refundApi.getAffectedOrders(variantId),
+    // Chỉ gọi API khi variantId có giá trị (tránh gọi dư thừa khi chưa có ID)
+    enabled: !!variantId,
+  });
+};
+// Lấy danh sách đơn bị ảnh hưởng (Bước 2)
+export const useAffectedOrders = (variantId: string) => {
+  return useQuery({
+    queryKey: refundKeys.affectedOrders(variantId),
+    queryFn: () => refundApi.getAffectedOrders(variantId),
+    // Chỉ gọi API khi variantId có giá trị (tránh gọi dư thừa khi chưa có ID)
+    enabled: !!variantId,
+  });
+};
 // Lấy đơn đã hủy có thanh toán thành công
 export const useCancelledPaidOrders = (params?: PaginationParams) => {
   return useQuery({

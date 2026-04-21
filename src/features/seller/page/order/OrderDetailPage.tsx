@@ -27,28 +27,7 @@ export default function OrderDetailPage() {
     return <div className="p-6">Đang tải chi tiết đơn...</div>;
   }
 
-
   const handleReject = async () => {
-    if (!orderId) return;
-    const confirmed = window.confirm(
-      'Bạn có chắc muốn yêu cầu khách hàng gửi lại đơn? Đơn hàng sẽ chuyển sang trạng thái ON_HOLD.',
-    );
-    if (!confirmed) return;
-
-    setVerifying(true);
-    try {
-      await orderApi.verifyOrder(orderId, false);
-      showToast('Đã yêu cầu khách hàng gửi lại thành công!', 'success');
-      setTimeout(() => navigate(-1), 1500);
-    } catch (error) {
-      console.error('Lỗi:', error);
-      showToast('Có lỗi xảy ra, vui lòng thử lại.', 'error');
-    } finally {
-      setVerifying(false);
-    }
-  };
-
-const handleReject = async () => {
     if (!orderId) return;
     const confirmed = window.confirm(
       'Bạn có chắc muốn yêu cầu khách hàng gửi lại đơn? Đơn hàng sẽ chuyển sang trạng thái ON_HOLD.',
@@ -152,10 +131,6 @@ const handleReject = async () => {
                         SPH: {p.osSphere} | CYL: {p.osCylinder} | AXIS: {p.osAxis}
                       </p>
 
-export { SidebarContext };
-
-export { SidebarContext };
-
                       <p className="text-sm text-gray-500 mt-2">Note: {p.note}</p>
                     </div>
                   </>
@@ -179,9 +154,6 @@ export { SidebarContext };
               className="flex-1 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50"
             >
               {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
-
- {verifying ? 'Đang xử lý...' : 'Xác nhận & Chuyển vận hành'}
-
             </button>
           </div>
         </div>
