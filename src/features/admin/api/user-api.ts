@@ -20,3 +20,10 @@ export const userApi = {
     return response.data;
   },
 };
+assignRole: async ({ userId, role }: { userId: string; role: string }) => {
+    const response = await api.put(`/users/${userId}/role`, null, {
+      params: { role },
+    });
+    return response.data;
+  },
+};    
