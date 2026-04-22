@@ -5,11 +5,3 @@ export const dashboardApi = {
   getRevenue: async () =>
     await api.get<DashboardResponse>('/dashboard/revenue').then((res) => res.data.result), // Trả về trực tiếp .result để dùng cho gọn
 };
-export const dashboardApi = {
-  getRevenue: async () =>
-    await api.get<DashboardResponse>('/dashboard/revenue').then((res) => res.data.result), // Trả về trực tiếp .result để dùng cho gọn
-};
-export const dashboardApi = {
-  getRevenue: async () =>
-    await api.get<DashboardResponse>('/dashboard/revenue').then((res) => res.data.result), // Trả về trực tiếp .result để dùng cho gọn
-};
