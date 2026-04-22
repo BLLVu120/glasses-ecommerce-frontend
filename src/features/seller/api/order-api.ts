@@ -79,4 +79,44 @@ export const orderApi = {
   verifyOrder: async (orderId: string, isApproved: boolean): Promise<void> => {
     await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
   },
+};getAwaitingVerificationOrders: async (
+    page: number = 0,
+    size: number = 10,
+  ): Promise<PaginatedResponse<Order>> => {
+    return orderApi.getOrders({
+      status: 'AWAITING_VERIFICATION',
+      page,
+      size,
+      sortBy: 'createdAt',
+      sortDir: 'desc',
+    });
+  },
+  getOrderDetail: async (orderId: string): Promise<Order> => {
+    const res = await api.get(`/management/orders/${orderId}`);
+    return res.data.result;
+  },
+  verifyOrder: async (orderId: string, isApproved: boolean): Promise<void> => {
+    await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
+  },
 };
+getAwaitingVerificationOrders: async (
+    page: number = 0,
+    size: number = 10,
+  ): Promise<PaginatedResponse<Order>> => {
+    return orderApi.getOrders({
+      status: 'AWAITING_VERIFICATION',
+      page,
+      size,
+      sortBy: 'createdAt',
+      sortDir: 'desc',
+    });
+  },
+  getOrderDetail: async (orderId: string): Promise<Order> => {
+    const res = await api.get(`/management/orders/${orderId}`);
+    return res.data.result;
+  },
+  verifyOrder: async (orderId: string, isApproved: boolean): Promise<void> => {
+    await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
+  },
+};
+
