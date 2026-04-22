@@ -7,3 +7,15 @@ export const lensApi = {
   create: async (payload: CreateLensRequest) =>
     await api.post('/lenses', payload).then((res) => res.data),
 };
+export const lensApi = {
+  getAll: async () => await api.get<LensListResponse>('/lenses').then((res) => res.data),
+
+  create: async (payload: CreateLensRequest) =>
+    await api.post('/lenses', payload).then((res) => res.data),
+};
+export const lensApi = {
+  getAll: async () => await api.get<LensListResponse>('/lenses').then((res) => res.data),
+
+  create: async (payload: CreateLensRequest) =>
+    await api.post('/lenses', payload).then((res) => res.data),
+};
