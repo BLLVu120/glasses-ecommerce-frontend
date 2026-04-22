@@ -26,3 +26,21 @@ export const useAssignRole = () => {
     },
   });
 };
+export const useAssignRole = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: userApi.assignRole,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+};
+export const useAssignRole = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: userApi.assignRole,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+};
