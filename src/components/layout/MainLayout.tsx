@@ -12,7 +12,12 @@ export const MainLayout = () => {
       <CartDrawer />
       <Header />
 
+      {/* flex-1: Chiếm hết khoảng trống còn lại */}
+      <main className="flex-1 w-full">
+        <Outlet />
+      </main>
 
+      <Footer />
 
     </div>
   );

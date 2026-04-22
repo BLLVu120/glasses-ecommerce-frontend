@@ -38,11 +38,4 @@ export function AdminDashboardLayout() {
       <DashboardContent />
     </SidebarProvider>
   );
-}export function AdminDashboardLayout() {
-  return (
-    <SidebarProvider>
-      <DashboardContent />
-    </SidebarProvider>
-  );
 }
-
