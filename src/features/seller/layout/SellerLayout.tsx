@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { SidebarProvider } from '@/features/manager/layout/SidebarContext';
-import { useSidebar } from '@/features/manager/hooks/useSidebar';
+import { SidebarProvider } from './SidebarContext';
+import { useSidebar } from '../hook/useSidebar';
 
 // Đường dẫn import tùy thuộc vào cấu trúc thư mục của bạn
 import { SellerSidebar } from './Sidebar';

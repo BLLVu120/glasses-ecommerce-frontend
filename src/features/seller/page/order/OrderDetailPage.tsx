@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { orderApi, type Order } from '../../api/order-api';
 
 export default function OrderDetailPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [order, setOrder] = useState<Order | null>(null);
   const [verifying, setVerifying] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
@@ -37,6 +39,7 @@ export default function OrderDetailPage() {
     setVerifying(true);
     try {
       await orderApi.verifyOrder(orderId, false);
+      queryClient.invalidateQueries({ queryKey: ['orders', 'awaiting_verification'] });
       showToast('Đã yêu cầu khách hàng gửi lại thành công!', 'success');
       setTimeout(() => navigate(-1), 1500);
     } catch (error) {
@@ -52,6 +55,7 @@ export default function OrderDetailPage() {
     setVerifying(true);
     try {
       await orderApi.verifyOrder(orderId, true);
+      queryClient.invalidateQueries({ queryKey: ['orders', 'awaiting_verification'] });
       showToast('Đã xác nhận và chuyển vận hành!', 'success');
       setTimeout(() => navigate(-1), 1500);
     } catch (error) {
