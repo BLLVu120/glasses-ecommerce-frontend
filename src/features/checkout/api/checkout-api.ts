@@ -15,6 +15,16 @@ export const paymentApi = {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => res.data),
+        createOrder: async (formData: FormData, paymentMethod: string) =>
+    await api
+      .post('/orders/create', formData, {
+        params: {
+          PaymentMethod: paymentMethod,
+        },
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((res) => res.data),
+
 
   // Lấy link thanh toán VNPay
   checkoutVnpay: async (orderId: string | number) =>
