@@ -14,13 +14,6 @@ interface PrescriptionData {
   imageUrl: string | null;
   notes: string;
 }
-interface PrescriptionData {
-  od: EyeSpecs;
-  os: EyeSpecs;
-  imageUrl: string | null;
-  notes: string;
-}
-
 interface PrescriptionState {
   // Trạng thái đơn hàng
   orderType: 'buy-now' | 'pre-order' | 'custom';
