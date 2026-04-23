@@ -22,6 +22,22 @@ export interface Order {
   depositAmount: number;
   items: OrderItem[];
 }
+dress: string;
+  orderStatus:
+    | 'PENDING'
+    | 'AWAITING_VERIFICATION'
+    | 'ON_HOLD'
+    | 'CONFIRMED'
+    | 'PROCESSING'
+    | 'PRODUCED'
+    | 'SHIPPED'
+    | 'COMPLETED'
+    | 'CANCELLED'
+    | string;
+  totalAmount: number;
+  depositAmount: number;
+  items: OrderItem[];
+}
 export interface Prescription {
   id: string;
   imageUrl: string | null;
