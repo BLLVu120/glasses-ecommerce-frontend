@@ -1,21 +1,17 @@
+// src/features/users/pages/StaffCustomerPage.tsx
 import { useState } from 'react';
+import axios from 'axios';
 import { Trash2, Loader2, ShieldCheck, X, CheckCircle, AlertCircle, Edit } from 'lucide-react';
 import { useUsers, useAssignRole } from '../hooks/useUsers';
+import type { UserRole, UserSummary } from '../api/user-api';
 
-type StaffRole = 'SALE' | 'OPERATION' | 'SHIPPER' | 'MANAGER' | 'ADMIN';
-
-interface AdminUser {
-  id: string;
-  username: string;
-  email?: string;
-}
+type StaffRole = 'SALE' | 'OPERATION' | 'MANAGER' | 'ADMIN';
 
 const STAFF_ROLES: { key: StaffRole; label: string; color: string }[] = [
   { key: 'ADMIN', label: 'Admin', color: 'bg-red-50 text-red-600 hover:bg-red-100' },
   { key: 'MANAGER', label: 'Manager', color: 'bg-orange-50 text-orange-600 hover:bg-orange-100' },
   { key: 'SALE', label: 'Sale', color: 'bg-blue-50 text-blue-600 hover:bg-blue-100' },
   { key: 'OPERATION', label: 'Operation', color: 'bg-purple-50 text-purple-600 hover:bg-purple-100' },
-  { key: 'SHIPPER', label: 'Shipper', color: 'bg-green-50 text-green-600 hover:bg-green-100' },
 ];
 
 const Toast = ({
@@ -28,111 +24,120 @@ const Toast = ({
   onClose: () => void;
 }) => (
   <div
-    className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-white shadow-lg transition-all ${
-      type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    className={`fixed bottom-6 right-6 z-[100] flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-semibold transition-all ${
+      type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
     }`}
   >
-    {type === 'success' ? <CheckCircle className="h-4 w-4" /> : <AlertCircle className="h-4 w-4" />}
+    {type === 'success' ? <CheckCircle className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
     <span>{message}</span>
     <button onClick={onClose} className="ml-2 hover:opacity-70">
-      <X className="h-4 w-4" />
+      <X className="w-4 h-4" />
     </button>
   </div>
 );
 
+// 🚀 REUSABLE MODAL CHO CẢ NHÂN VIÊN VÀ KHÁCH HÀNG
 const AssignRoleModal = ({
   user,
   onClose,
   onSuccess,
 }: {
-  user: AdminUser;
+  user: UserSummary;
   onClose: () => void;
   onSuccess: (message: string) => void;
 }) => {
   const assignMutation = useAssignRole();
   const [error, setError] = useState<string | null>(null);
 
-  const handleAssign = (role: string) => {
+  // Đổi kiểu của tham số role thành string để nhận cả 'CUSTOMER'
+  const handleAssign = (role: UserRole) => {
     setError(null);
     assignMutation.mutate(
-      { userId: user.id, role },
+      { userId: user.id, role: role },
       {
         onSuccess: () => {
-          onSuccess(`Da cap nhat quyen cua ${user.username} thanh ${role}!`);
+          onSuccess(`Đã cập nhật quyền của ${user.username} thành ${role}!`);
           onClose();
         },
-        onError: () => {
-          setError('Cap nhat quyen that bai. Vui long thu lai!');
+        onError: (error: unknown) => {
+          if (!axios.isAxiosError<{ message?: string; error?: string }>(error)) {
+            setError('Cập nhật quyền thất bại. Vui lòng thử lại!');
+            return;
+          }
+
+          const message =
+            error?.response?.data?.message ||
+            error?.response?.data?.error ||
+            'Cập nhật quyền thất bại. Vui lòng thử lại!';
+          setError(message);
         },
       },
     );
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
-        <div className="mb-4 flex items-center justify-between">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-lg font-bold text-slate-900">Cap nhat vai tro</h3>
-            <p className="mt-0.5 text-sm text-slate-500">
-              Chon vai tro moi cho <span className="font-semibold text-slate-700">{user.username}</span>
+            <h3 className="font-bold text-slate-900 text-lg">Cập nhật vai trò</h3>
+            <p className="text-sm text-slate-500 mt-0.5">
+              Chọn vai trò mới cho <span className="font-semibold text-slate-700">{user.username}</span>
             </p>
           </div>
-          <button onClick={onClose} className="rounded-lg p-2 transition-colors hover:bg-slate-100">
-            <X className="h-4 w-4 text-slate-500" />
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
+            <X className="w-4 h-4 text-slate-500" />
           </button>
         </div>
 
         {error && (
-          <div className="mb-3 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
-            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+          <div className="mb-3 flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         <div className="space-y-2">
+          {/* Render các role của Staff */}
           {STAFF_ROLES.map((roleObj) => (
             <button
               key={roleObj.key}
               onClick={() => handleAssign(roleObj.key)}
               disabled={assignMutation.isPending}
-              className={`w-full rounded-xl px-4 py-3 text-sm font-semibold transition-all disabled:opacity-50 ${roleObj.color}`}
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 ${roleObj.color}`}
             >
-              <span className="flex items-center justify-between">
-                <span>{roleObj.label}</span>
-                {assignMutation.isPending && assignMutation.variables?.role === roleObj.key ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <ShieldCheck className="h-4 w-4" />
-                )}
-              </span>
+              <span>{roleObj.label}</span>
+              {assignMutation.isPending && assignMutation.variables?.role === roleObj.key ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <ShieldCheck className="w-4 h-4" />
+              )}
             </button>
           ))}
 
           <div className="my-2 border-t border-slate-100"></div>
 
+          {/* Nút riêng biệt để chuyển về Customer */}
           <button
             onClick={() => handleAssign('CUSTOMER')}
             disabled={assignMutation.isPending}
-            className="w-full rounded-xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-200 disabled:opacity-50"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 bg-slate-100 text-slate-600 hover:bg-slate-200"
           >
-            <span className="flex items-center justify-between">
-              <span>Khach hang (Customer)</span>
-              {assignMutation.isPending && assignMutation.variables?.role === 'CUSTOMER' ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <ShieldCheck className="h-4 w-4" />
-              )}
-            </span>
+            <span>Khách hàng (Customer)</span>
+            {assignMutation.isPending && assignMutation.variables?.role === 'CUSTOMER' ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <ShieldCheck className="w-4 h-4" />
+            )}
           </button>
         </div>
 
         <button
           onClick={onClose}
           disabled={assignMutation.isPending}
-          className="mt-4 w-full py-2 text-sm text-slate-500 transition-colors hover:text-slate-700 disabled:opacity-50"
+          className="w-full mt-4 py-2 text-sm text-slate-500 hover:text-slate-700 transition-colors disabled:opacity-50"
         >
-          Huy
+          Huỷ
         </button>
       </div>
     </div>
@@ -144,20 +149,33 @@ const StaffView = () => {
   const { data: staffList = [], isLoading } = useUsers(activeRole);
   const assignMutation = useAssignRole();
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const [selectedStaff, setSelectedStaff] = useState<AdminUser | null>(null);
+  
+  // State để lưu nhân viên đang được chọn đổi role
+  const [selectedStaff, setSelectedStaff] = useState<UserSummary | null>(null);
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const handleDelete = (staff: AdminUser) => {
-    if (window.confirm(`Ban co chac muon xoa nhan vien "${staff.username}"?`)) {
+  const handleDelete = (staff: UserSummary) => {
+    if (
+      window.confirm(
+        `Bạn có chắc muốn xoá nhân viên "${staff.username}"?\nHọ sẽ được chuyển thành Customer.`,
+      )
+    ) {
       assignMutation.mutate(
         { userId: staff.id, role: 'CUSTOMER' },
         {
-          onSuccess: () => showToast(`Da chuyen "${staff.username}" thanh Customer!`, 'success'),
-          onError: () => showToast('Thao tac that bai, thu lai!', 'error'),
+          onSuccess: () => showToast(`Đã chuyển "${staff.username}" thành Customer!`, 'success'),
+          onError: (error: unknown) => {
+            if (axios.isAxiosError<{ message?: string; error?: string }>(error)) {
+              showToast(error.response?.data?.message || 'Thao tác thất bại, thử lại!', 'error');
+              return;
+            }
+
+            showToast('Thao tác thất bại, thử lại!', 'error');
+          },
         },
       );
     }
@@ -167,6 +185,7 @@ const StaffView = () => {
     <div>
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
+      {/* Tái sử dụng AssignRoleModal cho Nhân viên */}
       {selectedStaff && (
         <AssignRoleModal
           user={selectedStaff}
@@ -175,38 +194,38 @@ const StaffView = () => {
         />
       )}
 
-      <div className="overflow-x-auto border-b border-slate-100 px-6 pt-4">
-        <div className="flex gap-1 overflow-x-auto">
-          {STAFF_ROLES.map((role) => (
-            <button
-              key={role.key}
-              onClick={() => setActiveRole(role.key)}
-              className={`-mb-px whitespace-nowrap rounded-t-lg border-b-2 px-5 py-2 text-sm font-semibold transition-all ${
-                activeRole === role.key
-                  ? 'border-slate-900 bg-white text-slate-900'
-                  : 'border-transparent text-slate-400 hover:text-slate-600'
-              }`}
-            >
-              {role.label}
-            </button>
-          ))}
-        </div>
+      {/* Sub-tabs */}
+      <div className="flex gap-1 px-6 pt-4 border-b border-slate-100 overflow-x-auto">
+        {STAFF_ROLES.map((role) => (
+          <button
+            key={role.key}
+            onClick={() => setActiveRole(role.key)}
+            className={`px-5 py-2 text-sm font-semibold rounded-t-lg transition-all border-b-2 -mb-px whitespace-nowrap ${
+              activeRole === role.key
+                ? 'border-slate-900 text-slate-900 bg-white'
+                : 'border-transparent text-slate-400 hover:text-slate-600'
+            }`}
+          >
+            {role.label}
+          </button>
+        ))}
       </div>
 
+      {/* Table */}
       {isLoading ? (
         <div className="flex justify-center p-20">
           <Loader2 className="animate-spin" />
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b bg-slate-50">
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500">Nhan vien</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500">Email</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500">Vai tro</th>
-                <th className="px-6 py-4 text-right text-xs font-bold uppercase text-slate-500">
-                  Hanh dong
+              <tr className="bg-slate-50 border-b">
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Nhân viên</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Vai trò</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">
+                  Hành động
                 </th>
               </tr>
             </thead>
@@ -214,21 +233,19 @@ const StaffView = () => {
               {staffList.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
-                    Khong co nhan vien nao
+                    Không có nhân viên nào
                   </td>
                 </tr>
               ) : (
-                staffList.map((staff: AdminUser) => (
+                staffList.map((staff) => (
                   <tr key={staff.id} className="hover:bg-slate-50/50">
                     <td className="px-6 py-4 font-medium text-slate-900">{staff.username}</td>
                     <td className="px-6 py-4 text-slate-600">{staff.email || 'N/A'}</td>
                     <td className="px-6 py-4">
                       <span
-                        className={`rounded px-2 py-1 text-xs font-semibold ${
-                          STAFF_ROLES.find((r) => r.key === activeRole)?.color.replace(
-                            /hover:[^\s]+/g,
-                            '',
-                          ) || 'bg-slate-50 text-slate-600'
+                        className={`px-2 py-1 rounded text-xs font-semibold ${
+                          STAFF_ROLES.find((r) => r.key === activeRole)?.color.replace(/hover:[^\s]+/g, '') ||
+                          'bg-slate-50 text-slate-600'
                         }`}
                       >
                         {activeRole}
@@ -239,24 +256,24 @@ const StaffView = () => {
                         <button
                           onClick={() => setSelectedStaff(staff)}
                           disabled={assignMutation.isPending}
-                          title="Doi vai tro"
-                          className="rounded-lg p-2 text-blue-600 transition-colors hover:bg-blue-50 disabled:opacity-50"
+                          title="Đổi vai trò"
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="w-4 h-4" />
                         </button>
 
                         <button
                           onClick={() => handleDelete(staff)}
                           disabled={assignMutation.isPending}
-                          title="Xoa nhan vien"
-                          className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-50 disabled:opacity-50"
+                          title="Xoá nhân viên (chuyển thành Customer)"
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                         >
                           {assignMutation.isPending &&
                           assignMutation.variables?.userId === staff.id &&
                           assignMutation.variables?.role === 'CUSTOMER' ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <Loader2 className="w-4 h-4 animate-spin" />
                           ) : (
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="w-4 h-4" />
                           )}
                         </button>
                       </div>
@@ -274,7 +291,7 @@ const StaffView = () => {
 
 const CustomerView = () => {
   const { data: customerList = [], isLoading } = useUsers('CUSTOMER');
-  const [selectedCustomer, setSelectedCustomer] = useState<AdminUser | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<UserSummary | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   const showToast = (message: string, type: 'success' | 'error') => {
@@ -282,13 +299,12 @@ const CustomerView = () => {
     setTimeout(() => setToast(null), 3000);
   };
 
-  if (isLoading) {
+  if (isLoading)
     return (
       <div className="flex justify-center p-20">
         <Loader2 className="animate-spin" />
       </div>
     );
-  }
 
   return (
     <>
@@ -301,16 +317,15 @@ const CustomerView = () => {
           onSuccess={(msg) => showToast(msg, 'success')}
         />
       )}
-
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left">
+        <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b bg-slate-50">
-              <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500">Khach hang</th>
-              <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500">Email</th>
-              <th className="px-6 py-4 text-xs font-bold uppercase text-slate-500">Trang thai</th>
-              <th className="px-6 py-4 text-right text-xs font-bold uppercase text-slate-500">
-                Hanh dong
+            <tr className="bg-slate-50 border-b">
+              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Khách hàng</th>
+              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Email</th>
+              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">Trạng thái</th>
+              <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase text-right">
+                Hành động
               </th>
             </tr>
           </thead>
@@ -318,26 +333,26 @@ const CustomerView = () => {
             {customerList.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-12 text-center text-slate-400">
-                  Khong co khach hang nao
+                  Không có khách hàng nào
                 </td>
               </tr>
             ) : (
-              customerList.map((customer: AdminUser) => (
+              customerList.map((customer) => (
                 <tr key={customer.id} className="hover:bg-slate-50/50">
                   <td className="px-6 py-4 font-medium text-slate-900">{customer.username}</td>
                   <td className="px-6 py-4 text-slate-600">{customer.email || 'N/A'}</td>
                   <td className="px-6 py-4">
-                    <span className="rounded bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-600">
+                    <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded text-xs font-semibold">
                       Customer
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button
                       onClick={() => setSelectedCustomer(customer)}
-                      className="ml-auto flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-slate-700"
+                      className="flex items-center gap-1.5 ml-auto px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-700 transition-colors"
                     >
-                      <ShieldCheck className="h-3.5 w-3.5" />
-                      Nang quyen
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      Nâng quyền
                     </button>
                   </td>
                 </tr>
@@ -354,34 +369,31 @@ const StaffCustomerPage = () => {
   const [activeTab, setActiveTab] = useState<'staff' | 'customer'>('staff');
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
-      <div className="mb-8 flex items-end justify-between">
+    <div className="p-8 bg-slate-50 min-h-screen">
+      <div className="flex justify-between items-end mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">Quan ly nguoi dung</h1>
-          <p className="mt-1 text-slate-500">Quan ly nhan vien va khach hang</p>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Quản lý người dùng</h1>
+          <p className="text-slate-500 mt-1">Quản lý nhân viên và khách hàng</p>
         </div>
       </div>
 
-      <div className="mb-6 flex w-fit gap-1 rounded-xl bg-slate-200/50 p-1">
+      {/* Main tabs */}
+      <div className="mb-6 flex gap-1 bg-slate-200/50 p-1 rounded-xl w-fit">
         <button
           onClick={() => setActiveTab('staff')}
-          className={`rounded-lg px-6 py-2 text-sm font-bold transition-all ${
-            activeTab === 'staff' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
-          }`}
+          className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'staff' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
         >
-          Nhan vien
+          Nhân viên
         </button>
         <button
           onClick={() => setActiveTab('customer')}
-          className={`rounded-lg px-6 py-2 text-sm font-bold transition-all ${
-            activeTab === 'customer' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
-          }`}
+          className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'customer' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
         >
-          Khach hang
+          Khách hàng
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {activeTab === 'staff' ? <StaffView /> : <CustomerView />}
       </div>
     </div>

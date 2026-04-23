@@ -18,8 +18,6 @@ export default function HomePage() {
   // 2. Slideshow Banner Data
   const bannerSlides = [
     {
-     
-     
       tag: 'Cam Kết Kiệt Tác',
       headline: 'Định hình phong cách.',
       subline: 'Tôn vinh khí chất.',
