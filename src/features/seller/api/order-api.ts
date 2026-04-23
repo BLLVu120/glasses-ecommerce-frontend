@@ -70,10 +70,7 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export const orderApi = {
-  getOrders: async (params?: GetOrdersParams): Promise<PaginatedResponse<Order>> => {
-    const response = await api.get('/management/orders', { params });
-    return response.data.result;
+
   },
 
   getAwaitingVerificationOrders: async (
