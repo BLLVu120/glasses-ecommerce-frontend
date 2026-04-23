@@ -28,6 +28,23 @@ function GlassesModel({ url }: { url: string }) {
       <primitive object={scene} />
     </group>
   );
+}  useEffect(() => {
+    if (!groupRef.current) return;
+    // Auto-center and auto-scale the model
+    const box = new THREE.Box3().setFromObject(scene);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = 2 / (maxDim || 1);
+    groupRef.current.scale.setScalar(scale);
+    groupRef.current.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+  }, [scene]);
+
+  return (
+    <group ref={groupRef}>
+      <primitive object={scene} />
+    </group>
+  );
 }
 
 export default function GlassesModelViewer({ modelUrl }: GlassesModelViewerProps) {
