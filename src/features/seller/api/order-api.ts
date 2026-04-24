@@ -92,11 +92,8 @@ export interface PaginatedResponse<T> {
   verifyOrder: async (orderId: string, isApproved: boolean): Promise<void> => {
     await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
   },
-};getAwaitingVerificationOrders: async (
-    page: number = 0,
-    size: number = 10,
-  ): Promise<PaginatedResponse<Order>> => {
-    return orderApi.getOrders({
+};
+   return orderApi.getOrders({
       status: 'AWAITING_VERIFICATION',
       page,
       size,
@@ -112,11 +109,7 @@ export interface PaginatedResponse<T> {
     await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
   },
 };
-getAwaitingVerificationOrders: async (
-    page: number = 0,
-    size: number = 10,
-  ): Promise<PaginatedResponse<Order>> => {
-    return orderApi.getOrders({
+   return orderApi.getOrders({
       status: 'AWAITING_VERIFICATION',
       page,
       size,
@@ -132,4 +125,3 @@ getAwaitingVerificationOrders: async (
     await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
   },
 };
-
