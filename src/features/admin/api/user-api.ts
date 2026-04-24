@@ -20,29 +20,3 @@ export const userApi = {
     return response.data;
   },
 };
-
-  deleteUser: async (id: string) => {
-    const response = await api.delete(`/users/${id}`);
-    return response.data;
-  },
-
-  assignRole: async ({ userId, role }: { userId: string; role: string }) => {
-    const response = await api.put(`/users/${userId}/role`, null, {
-      params: { role },
-    });
-    return response.data;
-  },
-};
-
-  deleteUser: async (id: string) => {
-    const response = await api.delete(`/users/${id}`);
-    return response.data;
-  },
-
-  assignRole: async ({ userId, role }: { userId: string; role: string }) => {
-    const response = await api.put(`/users/${userId}/role`, null, {
-      params: { role },
-    });
-    return response.data;
-  },
-};
