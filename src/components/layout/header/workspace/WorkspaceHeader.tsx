@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { Search, Menu } from 'lucide-react'; // Xoá Bell ở đây vì NotificationDropdown đã chứa sẵn Bell rồi
 import { WorkspaceUserMenu } from './WorkspaceUserMenu';
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 
 // 👇 1. Import Component Notification từ file index của feature
 import { NotificationDropdown } from '@/features/notification';
@@ -20,6 +21,10 @@ export default function WorkspaceHeader({
   onMenuClick,
   children,
 }: WorkspaceHeaderProps) {
+  const userRole = useAuthStore((state) => state.user?.role);
+  const hiddenNotificationRoles = new Set(['sale', 'seller', 'operation', 'manager', 'admin', 'shipper']);
+  const shouldHideNotification = userRole ? hiddenNotificationRoles.has(userRole.toLowerCase()) : false;
+
   return (
     <header className="sticky top-0 z-40 bg-white border-b h-16 flex items-center justify-between px-4 sm:px-6 shadow-sm">
       {/* LEFT: Menu Toggle (Mobile) & Role Title */}
@@ -58,8 +63,8 @@ export default function WorkspaceHeader({
 
         <div className="h-6 w-px bg-gray-200 mx-1 hidden sm:block"></div>
 
-        {/* 👇 2. Đặt NotificationDropdown thay cho cái button cũ */}
-        <NotificationDropdown />
+        {/* Ẩn notification với nhóm role nội bộ theo yêu cầu nghiệp vụ */}
+        {!shouldHideNotification && <NotificationDropdown />}
 
         {/* User Menu Component */}
         <WorkspaceUserMenu />

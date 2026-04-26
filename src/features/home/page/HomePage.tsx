@@ -40,6 +40,17 @@ export default function HomePage() {
       ],
       accent: 'from-[#0a0a0a] via-[#1a1209] to-[#0a0a0a]',
       glowColor: 'bg-amber-500/10',
+
+      tag: 'Bộ Sưu Tập Mới',
+      headline: 'Sang trọng từng đường nét.',
+      subline: 'Tinh tế vượt thời gian.',
+      desc: 'Những thiết kế lấy cảm hứng từ kiến trúc hiện đại, mang lại vẻ thanh lịch và cá tính riêng cho người đeo.',
+      badges: [
+        { icon: 'shield', label: 'Chất liệu cao cấp' },
+        { icon: 'gem', label: 'Thủ công tỉ mỉ' },
+      ],
+      accent: 'from-[#0a0a0a] via-[#1a1209] to-[#0a0a0a]',
+      glowColor: 'bg-amber-500/10',
     },
     {
       tag: 'Phong Cách Tối Giản',
