@@ -13,7 +13,6 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
     <div className="min-h-screen flex flex-col bg-gray-50">
       <CartDrawer />
       <Header />
-      <Header />
 
       <div className="flex-1 flex items-center justify-center p-6 md:p-12">
         <div className="w-[95%] max-w-[1400px] bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 min-h-[750px] lg:min-h-[80vh] border border-gray-100 transition-all hover:shadow-zinc-200/50">

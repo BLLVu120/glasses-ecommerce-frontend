@@ -28,6 +28,41 @@ export const useCheckoutFlow = () => {
         setStep(1);
         return;
       }
+
+      const isValueEmpty = (val: unknown) => {
+        if (val === null || val === undefined) return true;
+        const strVal = String(val).trim().toLowerCase();
+        return ['', '0', '0.00', '+0.00', '-0.00', '0.0', 'plan', 'none'].includes(strVal);
+      };
+
+      const hasPrescriptionData = (prescription: (typeof items)[number]['prescription']) => {
+        if (!prescription) return false;
+        if (prescription.imageUrl) return true;
+        if (prescription.notes && String(prescription.notes).trim() !== '') return true;
+
+        const odHasData = Boolean(
+          prescription.od && Object.values(prescription.od).some((val) => !isValueEmpty(val)),
+        );
+        const osHasData = Boolean(
+          prescription.os && Object.values(prescription.os).some((val) => !isValueEmpty(val)),
+        );
+
+        return odHasData || osHasData;
+      };
+
+      const hasLensButMissingPrescription = items.some(
+        (item) => item.lensId && !hasPrescriptionData(item.prescription),
+      );
+
+      if (hasLensButMissingPrescription) {
+        toast.error('Thiếu đơn bác sĩ', {
+          id: toastId,
+          description: 'Khi chọn tròng kính, bạn cần nhập thông số mắt hoặc tải lên ảnh đơn thuốc trước khi thanh toán.',
+        });
+        setIsSubmitting(false);
+        setStep(3);
+        return;
+      }
       if (
         !bankInfo?.bankName ||
         !bankInfo?.bankAccountNumber ||

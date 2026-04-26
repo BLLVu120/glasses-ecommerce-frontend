@@ -1,24 +1,18 @@
 // src/lib/axios.ts
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
-import { USE_MOCK } from '@/services/api';
-import { mockApi } from '@/services/mockApi';
 import axios from 'axios';
 
+const DEFAULT_API_URL = 'https://ge-optimis-production.up.railway.app/optics';
+
+const rawBaseUrl = import.meta.env.VITE_API_URL || DEFAULT_API_URL;
+const normalizedBaseUrl = rawBaseUrl.replace(/\/$/, '');
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: normalizedBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
-const realAdapter = api.defaults.adapter;
-if (USE_MOCK) {
-  api.defaults.adapter = async (config) => {
-    return (await mockApi.handle(config as any)) as any;
-  };
-} else if (realAdapter) {
-  api.defaults.adapter = realAdapter;
-}
 
 // 1. Request Interceptor: Gắn Token
 api.interceptors.request.use(

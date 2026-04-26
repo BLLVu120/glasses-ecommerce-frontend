@@ -13,21 +13,7 @@ export interface Prescription {
   osPd: number;
   note: string;
 }
-export interface Prescription1 {
-  id: string;
-  imageUrl: string | null;
-  odSphere: number;
-  odCylinder: number;
-  odAxis: number;
-  odAdd: number;
-  odPd: number;
-  osSphere: number;
-  osCylinder: number;
-  osAxis: number;
-  osAdd: number;
-  osPd: number;
-  note: string;
-}
+
 export interface OrderItem {
   orderItemId: string;
   productId: string | null; // Đã thêm dựa theo JSON mới
@@ -46,17 +32,6 @@ export interface OrderItem {
   totalPrice: number;
   status: 'IN_PRODUCTION' | 'COMPLETED' | 'PENDING' | string | null;
   prescription: Prescription | null;
-}
-export interface Payment2 {
-  id: string;
-  paymentMethod: string;
-  paymentPurpose: string;
-  amount: number;
-  percentage: number | null;
-  status: string;
-  paymentDate: string | null;
-  description: string | null;
-  transactionReference: string | null;
 }
 
 export interface Payment {
@@ -94,19 +69,29 @@ export interface Order {
   phoneNumber: string;
   orderStatus:
     | 'PENDING'
+    | 'AWAITING_VERIFICATION'
     | 'ON_HOLD'
     | 'CONFIRMED'
+    | 'AWAITING_FINAL_PAYMENT'
+    | 'PREPARING'
     | 'PROCESSING'
     | 'PRODUCED'
+    | 'PACKAGING'
+    | 'HANDED_TO_CARRIER'
+    | 'READY_TO_SHIP'
     | 'SHIPPED'
+    | 'DELIVERING'
+    | 'DELIVERED'
     | 'COMPLETED'
-    | 'CANCELLED';
+    | 'CANCELLED'
+    | 'REFUNDED';
   totalAmount: number;
   depositAmount: number;
   remainingAmount: number | null;
   paidAmount: number;
   items: OrderItem[];
   payments: Payment[];
+  trackingNumber: string | null;
   shipperInfo: ShipperInfo | null;
   comboId: string | null;
   comboName: string | null;
@@ -189,18 +174,32 @@ export const STATUS_CONFIG: Record<string, StatusConfig> = {
     className: 'bg-purple-100 text-purple-700 border-none',
   },
   PROCESSING: {
-    label: 'Đang xử lý',
+    label: 'Đang gia công',
     bg: 'bg-blue-100',
     text: 'text-blue-800',
     dot: 'bg-blue-600',
     className: 'bg-blue-100 text-blue-800 border-none',
   },
   PRODUCED: {
-    label: 'Đã sản xuất',
+    label: 'Đã gia công',
     bg: 'bg-teal-100',
     text: 'text-teal-700',
     dot: 'bg-teal-500',
     className: 'bg-teal-100 text-teal-700 border-none',
+  },
+  PACKAGING: {
+    label: 'Đang đóng gói',
+    bg: 'bg-orange-100',
+    text: 'text-orange-700',
+    dot: 'bg-orange-500',
+    className: 'bg-orange-100 text-orange-700 border-none',
+  },
+  HANDED_TO_CARRIER: {
+    label: 'Bàn giao ĐVVC',
+    bg: 'bg-purple-100',
+    text: 'text-purple-700',
+    dot: 'bg-purple-500',
+    className: 'bg-purple-100 text-purple-700 border-none',
   },
   READY_TO_SHIP: {
     label: 'Sẵn sàng giao',

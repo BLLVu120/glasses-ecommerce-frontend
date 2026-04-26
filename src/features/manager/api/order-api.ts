@@ -16,4 +16,16 @@ export const orderApi = {
   deleteOrder: async (orderId: string): Promise<void> => {
     await api.delete(`/management/orders/${orderId}`);
   },
+
+  verifyOrder: async (orderId: string, isApproved: boolean): Promise<void> => {
+    await api.put(`/sales/orders/${orderId}/verify?isApproved=${isApproved}`);
+  },
+
+  revertVerification: async (orderId: string): Promise<void> => {
+    await api.put(`/sales/orders/${orderId}/revert-verify`);
+  },
+
+  rejectOrder: async (orderId: string, reason?: string): Promise<void> => {
+    await api.put(`/sales/orders/${orderId}/reject${reason ? `?reason=${encodeURIComponent(reason)}` : ''}`);
+  },
 };

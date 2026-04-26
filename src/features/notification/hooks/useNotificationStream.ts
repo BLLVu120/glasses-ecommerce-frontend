@@ -6,6 +6,7 @@ import type { NotificationItem } from '../types';
 
 export const useNotificationStream = () => {
   const queryClient = useQueryClient();
+  const defaultApiUrl = 'https://ge-optimis-production.up.railway.app/optics';
 
   useEffect(() => {
     // 1. Lấy token từ Zustand Store
@@ -13,7 +14,7 @@ export const useNotificationStream = () => {
     if (!token) return;
 
     // 2. Lấy Base URL từ biến môi trường
-    const baseUrl = import.meta.env.VITE_API_URL;
+    const baseUrl = (import.meta.env.VITE_API_URL || defaultApiUrl).replace(/\/$/, '');
 
     // 3. Khởi tạo AbortController để quản lý việc đóng/mở kết nối
     const ctrl = new AbortController();
@@ -21,7 +22,7 @@ export const useNotificationStream = () => {
     // 4. Hàm kết nối SSE (dùng async/await)
     const connectStream = async () => {
       try {
-        await fetchEventSource(`${baseUrl}notifications/stream`, {
+        await fetchEventSource(`${baseUrl}/notifications/stream`, {
           method: 'GET',
           headers: {
             Accept: 'text/event-stream',

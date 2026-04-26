@@ -2,7 +2,7 @@ import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import StorefrontHeader from './storefront/StorefrontHeader';
 import WorkspaceHeader from './workspace/WorkspaceHeader';
 import { Button } from '@/components/ui/button';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, ScanBarcode, Settings } from 'lucide-react';
 
 export default function Header() {
   const { user } = useAuthStore();
@@ -27,6 +27,31 @@ export default function Header() {
     );
   }
 
-  // 3. Các vai trò còn lại dùng giao diện storefront mặc định
-  return <StorefrontHeader />;
+  // 3. Ops Staff
+  if (user.role === 'operation') {
+    return (
+      <WorkspaceHeader
+        roleName="OPERATIONS"
+        roleColor="text-orange-600"
+        searchPlaceholder="Quét mã vận đơn, SKU..."
+      >
+        <Button
+          size="sm"
+          variant="outline"
+          className="gap-2 border-orange-200 text-orange-700 hover:bg-orange-50"
+        >
+          <ScanBarcode className="w-4 h-4" /> Scan
+        </Button>
+      </WorkspaceHeader>
+    );
+  }
+
+  // 4. Admin
+  return (
+    <WorkspaceHeader roleName="ADMIN" roleColor="text-purple-600">
+      <Button variant="ghost" size="sm" className="gap-2">
+        <Settings className="w-4 h-4" /> Config
+      </Button>
+    </WorkspaceHeader>
+  );
 }

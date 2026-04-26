@@ -9,6 +9,8 @@ export function useOrders(params?: GetOrdersParams) {
     queryFn: () => orderApi.getOrders(params),
     // Giữ lại dữ liệu cũ trên màn hình trong lúc fetch trang mới (giúp UI không bị nháy)
     placeholderData: (previousData) => previousData,
+    // Tự động refetch mỗi 10 giây để load đơn mới
+    refetchInterval: 10_000,
   });
 
   return {

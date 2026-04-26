@@ -1,4 +1,4 @@
-import type { Order } from '@/features/manager/types/refund';
+import type { Order } from '@/features/manager/types/order-type';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 

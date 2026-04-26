@@ -23,6 +23,14 @@ export interface ProductImage {
   id: string;
   imageUrl: string;
 }
+
+export interface LensProduct {
+  id: string;
+  name: string;
+  material: string;
+  price: number;
+  description: string;
+}
 // src/types/product.ts (hoặc variant.ts)
 
 // Type Variant cốt lõi (như mình đã chốt ở trên)

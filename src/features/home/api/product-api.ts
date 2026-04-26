@@ -4,6 +4,7 @@ import type {
   FilterParams,
   GetFilteredProductsResponse,
   GetVariantsResponse,
+  LensProduct,
   Product,
   ProductVariant,
 } from '../types/product-type';
@@ -49,6 +50,11 @@ export const productApi = {
 
   getProductFeedback: async (productId: string) => {
     const response = await api.get(`/feedbacks/product/${productId}`);
+    return response.data?.result ?? [];
+  },
+
+  getLenses: async (): Promise<LensProduct[]> => {
+    const response = await api.get('/lenses');
     return response.data?.result ?? [];
   },
 };

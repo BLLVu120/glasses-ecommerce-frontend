@@ -17,11 +17,17 @@ import { PaymentSuccessPage } from '@/features/checkout/pages/PaymentSuccessPage
 
 import { MainLayout } from '@/components/layout/MainLayout';
 
-import OrderPage from '@/features/seller/page/order/OrderPage';
-import OrderDetailPage from '@/features/seller/page/order/OrderDetailPage';
+import ManagerOrderPage from '@/features/manager/page/orders/ManagerOrderPage';
+import StaffCustomerPage from '@/features/admin/page/StaffCustomerPage';
+
+import SellerOrderPage from '@/features/seller/page/order/SellerOrderPage';
+
+import { OpsStaffDashboardLayout } from '@/features/operation-staff/layout/OpsStaffDashboardLayout';
+import OpsStaffDashboardPage from '@/features/operation-staff/page/dashboard/OpsStaffDashboardPage';
 import { RequireRole } from './protected-route';
 import { SellerLayout } from '@/features/seller/layout/SellerLayout';
-import { SellerLayout } from '@/features/seller/layout/SellerLayout';
+import { AdminDashboardLayout } from '@/features/admin/layout/AdminDashboardLayout';
+
 export const router = createBrowserRouter([
   {
     children: [
@@ -73,6 +79,33 @@ export const router = createBrowserRouter([
           { path: 'orders', element: <MyOrders /> },
         ],
       },
+      {
+        path: 'admin',
+        element: (
+          <RequireRole allowedRoles={['admin']}>
+            <AdminDashboardLayout />
+          </RequireRole>
+        ),
+        children: [
+          { index: true, element: <StaffCustomerPage /> },
+        ],
+      },
+
+
+      // Protected Manager Routes
+      {
+        path: 'manager',
+        element: (
+          <RequireRole allowedRoles={['manager', 'admin']}>
+            <Outlet />
+          </RequireRole>
+        ),
+        children: [
+          { index: true, element: <ManagerOrderPage /> },
+          { path: 'orders', element: <ManagerOrderPage /> },
+        ],
+      },
+
       // Protected Seller Routes
       {
         path: 'seller',
@@ -82,11 +115,21 @@ export const router = createBrowserRouter([
           </RequireRole>
         ),
         children: [
-          { index: true, element: <OrderPage /> },
-          { path: 'orders/:orderId', element: <OrderDetailPage /> },
+          { index: true, element: <SellerOrderPage /> },
         ],
       },
     ],
+  },
+
+  // Protected Operation Staff Routes
+  {
+    path: 'ops-staff',
+    element: (
+      <RequireRole allowedRoles={['operation', 'admin']}>
+        <OpsStaffDashboardLayout />
+      </RequireRole>
+    ),
+    children: [{ index: true, element: <OpsStaffDashboardPage /> }],
   },
 
   // Fallback

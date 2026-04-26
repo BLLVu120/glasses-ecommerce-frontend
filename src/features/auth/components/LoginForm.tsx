@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useLoginForm } from '../hooks/useLoginForm';
-import { USE_MOCK } from '@/services/api';
 
 export default function LoginForm() {
   const { form, onSubmit, isLoading } = useLoginForm();
@@ -21,17 +20,6 @@ export default function LoginForm() {
         <h2 className="text-4xl font-bold text-zinc-900 mb-3 tracking-tight">Chào mừng quay lại</h2>
         <p className="text-gray-500 text-base font-medium">Vui lòng nhập thông tin để đăng nhập.</p>
       </div>
-
-      {USE_MOCK && (
-        <div className="mb-6 p-4 rounded-2xl bg-amber-50 text-amber-800 text-sm font-medium border border-amber-100">
-          <div className="font-bold mb-2">Mock accounts (copy nhanh)</div>
-          <div className="space-y-1 font-mono text-[12px]">
-            <div>admin / 123456 (ROLE_ADMIN)</div>
-            <div>sale / 123456 (ROLE_SALE)</div>
-            <div>customer / 123456 (ROLE_CUSTOMER)</div>
-          </div>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {errors.root && (

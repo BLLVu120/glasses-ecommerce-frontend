@@ -13,25 +13,7 @@ import {
   type RegisterInput,
 } from '../types';
 import { PROFILE_QUERY_KEY } from '@/features/profile/hooks/useProfileQuery';
-import { queryClient } from '@/lib/react-query';import {
-  JwtPayloadSchema,
-  type AuthStore,
-  type UserState,
- 
-  type RegisterInput,
-} from '../types';
-import { PROFILE_QUERY_KEY } from '@/features/profile/hooks/useProfileQuery';
 import { queryClient } from '@/lib/react-query';
-import {
-  JwtPayloadSchema,
-  type AuthStore,
-  type UserState,
- 
-  type RegisterInput,
-} from '../types';
-import { PROFILE_QUERY_KEY } from '@/features/profile/hooks/useProfileQuery';
-import { queryClient } from '@/lib/react-query';
-
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -61,7 +43,7 @@ export const useAuthStore = create<AuthStore>()(
           const decodedRaw = jwtDecode(response.token);
           const decoded = JwtPayloadSchema.parse(decodedRaw);
 
-          // BƯỚC SỬA: Mapping chuẩn theo type 'admin' | 'operations' | 'sales' | 'customer' | 'manager' | 'shipper'
+          // Mapping vai trò token về role frontend hợp lệ
           let userRole: UserState['role'] = 'customer'; // Mặc định là customer
           const scope = decoded.scope || '';
 
@@ -73,8 +55,6 @@ export const useAuthStore = create<AuthStore>()(
             userRole = 'operation';
           } else if (scope.includes('ROLE_SALE')) {
             userRole = 'sale';
-          } else if (scope.includes('ROLE_SHIPPER')) {
-            userRole = 'shipper';
           } else {
             userRole = 'customer';
           }
@@ -108,6 +88,12 @@ export const useAuthStore = create<AuthStore>()(
         if (!role) return '/';
 
         switch (role) {
+          case 'admin':
+            return '/admin';
+          case 'manager':
+            return '/manager';
+          case 'operation':
+            return '/ops-staff';
           case 'sale':
             return '/seller';
           default:

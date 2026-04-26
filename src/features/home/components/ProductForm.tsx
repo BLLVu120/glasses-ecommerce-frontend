@@ -5,11 +5,10 @@ import { usePrescriptionStore } from '../store/usePrescriptionStore';
 import { useCartStore } from '@/features/cart/store/useCartStore';
 import PrescriptionWidget from './PrescriptionModal';
 import { useProduct } from '../hooks/useProducts';
-import { useLenses } from '@/features/manager/hooks/useLense';
-import type { LensProduct } from '@/features/manager/types/lens';
+import { useLenses } from '../hooks/useLenses';
 // Import hook lấy danh sách variant
 import { useProductVariants } from '../hooks/useProductVariants';
-import type { ProductImage, ProductVariant } from '../types/product-type';
+import type { LensProduct, ProductImage, ProductVariant } from '../types/product-type';
 import { toast } from 'sonner';
 
 export default function ProductForm({ productId }: { productId: string }) {
@@ -52,6 +51,36 @@ export default function ProductForm({ productId }: { productId: string }) {
   const lensPrice = currentLens?.price || 0;
   const totalPrice = basePrice + lensPrice;
 
+  // --- RULE ĐƠN THUỐC KHI CHỌN TRÒNG ---
+  const isValueEmpty = (val: unknown) => {
+    if (val === null || val === undefined) return true;
+    const strVal = String(val).trim().toLowerCase();
+    return ['', '0', '0.00', '+0.00', '-0.00', '0.0', 'plan', 'none'].includes(strVal);
+  };
+
+  const eyeHasData = (
+    eye?: {
+      sphere?: string;
+      cylinder?: string;
+      axis?: string;
+      add?: string;
+      pd?: string;
+    },
+  ) =>
+    Boolean(eye && Object.values(eye).some((val) => !isValueEmpty(val)));
+
+  const hasDoctorPrescriptionImage = Boolean(prescription?.imageUrl?.trim());
+  const hasBothEyesSpecs = eyeHasData(prescription?.od) && eyeHasData(prescription?.os);
+  const hasRequiredPrescriptionForLens = hasDoctorPrescriptionImage || hasBothEyesSpecs;
+  const hasAnyPrescriptionData = Boolean(
+    hasDoctorPrescriptionImage ||
+      eyeHasData(prescription?.od) ||
+      eyeHasData(prescription?.os) ||
+      (prescription?.notes && String(prescription.notes).trim() !== ''),
+  );
+  const isLensSelected = Boolean(currentLens);
+  const isAddToCartBlockedByPrescriptionRule = isLensSelected && !hasRequiredPrescriptionForLens;
+
   // --- HANDLER: ADD TO CART TRỰC TIẾP ---
   const handleAddToCart = () => {
     if (!product) return;
@@ -62,30 +91,15 @@ export default function ProductForm({ productId }: { productId: string }) {
       return;
     }
 
-    // --- KIỂM TRA DỮ LIỆU ĐƠN THUỐC ---
-    const isValueEmpty = (val: unknown) => {
-      if (val === null || val === undefined) return true;
-      const strVal = String(val).trim().toLowerCase();
-      // Bổ sung thêm các trường hợp rỗng phổ biến
-      return ['', '0', '0.00', '+0.00', '-0.00', '0.0', 'plan', 'none'].includes(strVal);
-    };
-
-    const isOdHasData = Boolean(
-      prescription?.od && Object.values(prescription.od).some((val) => !isValueEmpty(val)),
-    );
-    const isOsHasData = Boolean(
-      prescription?.os && Object.values(prescription.os).some((val) => !isValueEmpty(val)),
-    );
-
-    const hasImagePrescription = Boolean(prescription?.imageUrl?.trim());
-    const hasEyePrescription = isOdHasData || isOsHasData;
-    const hasPrescriptionData = hasImagePrescription || hasEyePrescription;
-
-    if (!hasPrescriptionData) {
-      toast.error('Vui lòng tải ảnh đơn bác sĩ hoặc nhập thông tin mắt.');
+    if (isAddToCartBlockedByPrescriptionRule) {
+      toast.error(
+        'Khi chọn tròng kính, bạn cần tải đơn đo mắt hoặc nhập thông số mắt trái và mắt phải.',
+      );
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
       return;
     }
 
+    const hasPrescriptionData = hasRequiredPrescriptionForLens;
     const finalOrderType: 'buy-now' | 'pre-order' | 'custom' =
       selectedVariant.orderItemType === 'PRE_ORDER'
         ? 'pre-order'
@@ -99,7 +113,7 @@ export default function ProductForm({ productId }: { productId: string }) {
     const isLensNotSelected = !currentLens;
 
     // Validate 2: NẾU có đơn thuốc THÌ BẮT BUỘC phải có Tròng kính hợp lệ
-    if (hasPrescriptionData && isLensNotSelected) {
+    if (hasAnyPrescriptionData && isLensNotSelected) {
       toast.error('Bạn đã nhập thông số mắt hoặc đơn thuốc. Vui lòng chọn Tròng kính phù hợp!');
       setIsLensSelectionOpen(true); // Mở lại tab chọn tròng
 
@@ -155,19 +169,26 @@ export default function ProductForm({ productId }: { productId: string }) {
     );
 
   return (
-    <div className="bg-gray-50/50 rounded-2xl p-6 border border-gray-100 space-y-8 mt-8">
+    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sm:p-8 space-y-8 mt-8">
       {/* 1. CHỌN PHIÊN BẢN (GẮN LUÔN Ở ĐÂY) */}
       <div className="space-y-3">
-        <div className="flex justify-between items-end mb-2">
-          <h3 className="text-sm font-bold text-[#4A8795] uppercase tracking-wider">
-            1. Chọn phiên bản gọng
-          </h3>
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-[#4A8795]/10 px-2 text-xs font-black text-[#4A8795]">
+              1
+            </span>
+            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.18em]">
+              Chọn phiên bản gọng
+            </h3>
+          </div>
         </div>
 
         {isVariantsLoading ? (
-          <div className="animate-pulse h-24 bg-gray-200 rounded-xl w-full" />
+          <div className="animate-pulse h-24 bg-gray-100 rounded-2xl w-full" />
         ) : variants.length === 0 ? (
-          <p className="text-sm text-gray-500 italic">Sản phẩm hiện chưa có phân loại.</p>
+          <p className="text-sm text-gray-500 italic">
+            Sản phẩm hiện chưa có phân loại.
+          </p>
         ) : (
           <div className="flex flex-col gap-3">
             {variants.map((variant: ProductVariant) => {
@@ -180,10 +201,10 @@ export default function ProductForm({ productId }: { productId: string }) {
                 <button
                   key={variant.id}
                   onClick={() => setSelectedVariantId(variant.id)}
-                  className={`relative flex items-start gap-4 p-4 w-full text-left rounded-xl border-2 transition-all duration-200 ${
+                  className={`relative flex items-start gap-4 p-4 w-full text-left rounded-2xl border transition-all duration-200 ${
                     isSelected
-                      ? 'border-[#4A8795] bg-teal-50/20 shadow-sm'
-                      : 'border-gray-200 bg-white hover:border-gray-300'
+                      ? 'border-[#4A8795]/30 bg-[#4A8795]/5 shadow-[0_4px_20px_rgba(0,0,0,0.03)]'
+                      : 'border-gray-200 bg-[#F8FAFB] hover:border-[#4A8795]/20 hover:bg-white'
                   }`}
                 >
                   {/* ICON CHECK */}
@@ -201,7 +222,7 @@ export default function ProductForm({ productId }: { productId: string }) {
                       {variant.colorName}
                     </p>
                     <div className="flex flex-wrap items-center gap-2 mt-2">
-                      <span className="text-xs font-semibold px-2 py-0.5 bg-gray-100 text-gray-700 rounded-md border border-gray-200">
+                      <span className="text-xs font-semibold px-2 py-0.5 bg-white text-gray-700 rounded-md border border-gray-200">
                         Size {variant.sizeLabel}
                       </span>
                       <span className="text-xs font-medium text-gray-500 flex items-center gap-1">
@@ -240,20 +261,23 @@ export default function ProductForm({ productId }: { productId: string }) {
       </div>
 
       {/* 2. PRESCRIPTION */}
+     
       <div>
-        <h3 className="text-sm font-bold text-[#4A8795] uppercase mb-3">2. Đơn thuốc</h3>
-        <PrescriptionWidget />
-      </div>
-
-      <div>
-        <div className="flex justify-between items-center mb-3">
-          <h3 className="text-sm font-bold text-[#4A8795] uppercase">3. Lựa chọn thấu kính</h3>
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-3">
+            <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-[#4A8795]/10 px-2 text-xs font-black text-[#4A8795]">
+              2
+            </span>
+            <h3 className="text-sm font-black text-gray-900 uppercase tracking-[0.18em]">
+              Lựa chọn thấu kính
+            </h3>
+          </div>
           {isLensSelectionOpen && totalPages > 1 && (
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="p-1 rounded bg-white border border-gray-200 disabled:opacity-30"
+                className="p-1 rounded-lg bg-white border border-gray-200 text-gray-700 disabled:opacity-30"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -263,7 +287,7 @@ export default function ProductForm({ productId }: { productId: string }) {
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="p-1 rounded bg-white border border-gray-200 disabled:opacity-30"
+                className="p-1 rounded-lg bg-white border border-gray-200 text-gray-700 disabled:opacity-30"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -271,13 +295,14 @@ export default function ProductForm({ productId }: { productId: string }) {
           )}
         </div>
 
+
         {isLensesLoading ? (
-          <div className="h-24 bg-gray-200 animate-pulse rounded-xl" />
+          <div className="h-24 bg-gray-100 animate-pulse rounded-2xl" />
         ) : (
           <div className="relative">
             {/* 🚀 TRẠNG THÁI THU GỌN: Chỉ hiện khi khách ĐÃ thực hiện hành động chọn (ID có thể là null hoặc string) */}
             {!isLensSelectionOpen && (
-              <div className="bg-white border-2 border-[#4A8795] rounded-xl p-4 flex justify-between items-center animate-in fade-in slide-in-from-top-2 shadow-sm">
+              <div className="bg-white border border-[#4A8795]/30 rounded-2xl p-4 flex justify-between items-center animate-in fade-in slide-in-from-top-2 shadow-sm">
                 <div className="flex items-center gap-3">
                   <CheckCircle2 className="w-6 h-6 text-[#4A8795]" />
                   <div>
@@ -293,6 +318,8 @@ export default function ProductForm({ productId }: { productId: string }) {
                     </p>
                   </div>
                 </div>
+
+                
 
                 <div className="flex items-center gap-4">
                   {/* Nếu đang là một tròng kính cụ thể thì mới hiện nút "Bỏ chọn" để về null */}
@@ -319,7 +346,7 @@ export default function ProductForm({ productId }: { productId: string }) {
               <div className="flex flex-col gap-3 animate-in fade-in duration-300">
                 {/* LỰA CHỌN NULL: Khách phải click vào đây nếu không muốn lấy tròng */}
                 <div
-                  className={`border-2 rounded-xl bg-white cursor-pointer transition-all ${selectedLensId === null ? 'border-[#4A8795] shadow-sm bg-teal-50/10' : 'border-gray-200 hover:border-gray-300'}`}
+                  className={`border rounded-2xl bg-[#F8FAFB] cursor-pointer transition-all ${selectedLensId === null ? 'border-[#4A8795]/30 shadow-sm bg-[#4A8795]/5' : 'border-gray-200 hover:border-[#4A8795]/20 hover:bg-white'}`}
                   onClick={() => {
                     setLensId(null);
                     setIsLensSelectionOpen(false); // Chỉ đóng khi khách đã chọn
@@ -350,7 +377,7 @@ export default function ProductForm({ productId }: { productId: string }) {
                 {currentPaginatedLenses.map((lens: LensProduct) => (
                   <div
                     key={lens.id}
-                    className={`border-2 rounded-xl bg-white cursor-pointer transition-all ${selectedLensId === lens.id ? 'border-[#4A8795] shadow-sm bg-teal-50/10' : 'border-gray-200 hover:border-gray-300'}`}
+                    className={`border rounded-2xl bg-[#F8FAFB] cursor-pointer transition-all ${selectedLensId === lens.id ? 'border-[#4A8795]/30 shadow-sm bg-[#4A8795]/5' : 'border-gray-200 hover:border-[#4A8795]/20 hover:bg-white'}`}
                     onClick={() => {
                       setLensId(lens.id);
                       setIsLensSelectionOpen(false); // Đóng lại sau khi chọn thành công
@@ -407,6 +434,16 @@ export default function ProductForm({ productId }: { productId: string }) {
         )}
       </div>
 
+      <div>
+        <h3 className="mb-3 flex items-center gap-3 text-sm font-black text-gray-900 uppercase tracking-[0.18em]">
+          <span className="inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-[#4A8795]/10 px-2 text-xs font-black text-[#4A8795]">
+            3
+          </span>
+          Đơn thuốc
+        </h3>
+        <PrescriptionWidget />
+      </div>
+
       {/* 4. HIỂN THỊ TỔNG TIỀN VÀ NÚT MUA HÀNG TRỰC TIẾP */}
       <div className="mt-8 pt-6 border-t-2 border-dashed border-gray-200">
         <div className="flex justify-between items-end mb-4">
@@ -419,18 +456,26 @@ export default function ProductForm({ productId }: { productId: string }) {
               </p>
             )}
           </div>
-          <p className="text-2xl font-black text-[#1e2575]">
+          <p className="text-2xl font-black text-[#4A8795]">
             {totalPrice.toLocaleString('vi-VN')} ₫
           </p>
         </div>
 
         <Button
           onClick={handleAddToCart}
-          className="w-full h-14 text-lg font-bold bg-[#1e2575] hover:bg-[#151b54] shadow-lg transition-all active:scale-[0.98]"
+          disabled={isAddToCartBlockedByPrescriptionRule}
+          className="w-full h-14 text-lg font-bold bg-[#4A8795] hover:bg-[#3f7581] shadow-sm transition-all active:scale-[0.98]"
         >
           <ShoppingBag className="w-5 h-5 mr-2" />
           Thêm vào giỏ hàng
         </Button>
+
+        {isAddToCartBlockedByPrescriptionRule && (
+          <p className="mt-3 text-sm font-medium text-rose-600">
+            Bạn đã chọn tròng kính. Vui lòng tải đơn đo mắt hoặc nhập thông số cho cả mắt trái và
+            mắt phải.
+          </p>
+        )}
       </div>
     </div>
   );

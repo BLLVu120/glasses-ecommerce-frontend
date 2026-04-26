@@ -1,9 +1,7 @@
-import { useState, lazy, Suspense, useCallback } from 'react';
-import { createPortal } from 'react-dom';
-import { Tag, Box, Glasses, Layout, User, Target, Wrench, Scale, X, Loader2, RotateCcw } from 'lucide-react';
+import { useState } from 'react';
+import { Tag, Box, Glasses, Layout, User, Target, Wrench, Scale } from 'lucide-react';
 import { useProduct } from '../hooks/useProducts';
 
-const GlassesModelViewer = lazy(() => import('@/components/common/GlassesModelViewer'));
 // Thêm interface cho object hình ảnh của Product
 interface ProductImage {
   imageUrl: string;
@@ -15,13 +13,6 @@ export default function ProductGallery({ productId }: { productId: string }) {
 
   // 2. State cho thumbnail (lưu trữ URL string)
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [view3DOpen, setView3DOpen] = useState(false);
-
-  const proxyUrl = useCallback((url: string) => {
-    const s3Host = 'https://optics-management-storage.s3.amazonaws.com';
-    if (url.startsWith(s3Host)) return url.replace(s3Host, '/s3-proxy');
-    return url;
-  }, []);
 
   // 3. Loading Skeleton
   if (isLoading || !product) {
@@ -74,18 +65,6 @@ export default function ProductGallery({ productId }: { productId: string }) {
           }}
         />
 
-        {/* Action buttons */}
-        <div className="absolute bottom-6 flex items-center gap-3">
-          {product.modelUrl && (
-            <button
-              onClick={() => setView3DOpen(true)}
-              className="flex items-center gap-2 bg-white/80 backdrop-blur-md px-6 py-2.5 rounded-full shadow-xl hover:bg-violet-600 hover:text-white transition-all active:scale-95 text-sm font-bold text-violet-600 border border-white/50 group/btn"
-            >
-              <Box className="w-4 h-4 transition-transform group-hover/btn:rotate-12" />
-              View in 3D
-            </button>
-          )}
-        </div>
       </div>
 
       {/* --- DANH SÁCH ẢNH THUMBNAILS --- */}
@@ -175,54 +154,6 @@ export default function ProductGallery({ productId }: { productId: string }) {
             })}
         </div>
       </div>
-
-      {/* View in 3D Modal */}
-      {view3DOpen && product.modelUrl && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-white/95 backdrop-blur-lg animate-in fade-in duration-300">
-          {/* Header */}
-          <div className="absolute top-0 left-0 right-0 px-6 py-4 flex items-center justify-between z-10">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
-                <Box className="w-5 h-5 text-violet-600" />
-              </div>
-              <div>
-                <h2 className="text-gray-900 font-black text-base tracking-tight">View in 3D</h2>
-                <p className="text-gray-500 text-xs">{product.name}</p>
-              </div>
-            </div>
-            <button
-              onClick={() => setView3DOpen(false)}
-              className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* 3D Viewer */}
-          <div className="w-full max-w-3xl aspect-square rounded-2xl overflow-hidden bg-gradient-to-b from-gray-50 to-white shadow-2xl border border-gray-200">
-            <Suspense
-              fallback={
-                <div className="w-full h-full flex flex-col items-center justify-center gap-3">
-                  <Loader2 className="w-8 h-8 text-violet-500 animate-spin" />
-                  <p className="text-gray-500 text-sm font-semibold">Loading 3D model...</p>
-                </div>
-              }
-            >
-              <GlassesModelViewer modelUrl={proxyUrl(product.modelUrl)} />
-            </Suspense>
-          </div>
-
-          {/* Instructions */}
-          <div className="absolute bottom-6 flex items-center gap-6 text-gray-400 text-xs font-semibold">
-            <span className="flex items-center gap-1.5">
-              <RotateCcw className="w-3.5 h-3.5" /> Drag to rotate
-            </span>
-            <span>Scroll to zoom</span>
-            <span>Right-click to pan</span>
-          </div>
-        </div>,
-        document.body,
-      )}
     </div>
   );
 }
